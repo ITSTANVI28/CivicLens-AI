@@ -3,21 +3,22 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     
-    <!-- Primary CivicLens Palette -->
-    <color name="primary_blue">#0D47A1</color>
-    <color name="primary_blue_light">#1976D2</color>
-    <color name="accent_teal">#00B0FF</color>
+    <!-- Modern Indigo & Teal Theme -->
+    <color name="primary_blue">#3B82F6</color>
+    <color name="primary_dark">#1E3A8A</color>
+    <color name="primary_blue_light">#60A5FA</color>
+    <color name="accent_teal">#06B6D4</color>
     
-    <!-- Severity & Status Colors -->
-    <color name="severity_critical">#D50000</color>
-    <color name="severity_high">#FF6D00</color>
-    <color name="severity_medium">#FFD600</color>
-    <color name="severity_low">#00C853</color>
+    <!-- Hazard & Severity Tiers -->
+    <color name="severity_critical">#EF4444</color>
+    <color name="severity_high">#F97316</color>
+    <color name="severity_medium">#F59E0B</color>
+    <color name="severity_low">#10B981</color>
 
-    <!-- Backgrounds & Surfaces -->
-    <color name="bg_light">#F8F9FA</color>
+    <!-- Surfaces & Typography -->
+    <color name="bg_light">#F1F5F9</color>
     <color name="surface_card">#FFFFFF</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="divider_line">#E0E0E0</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#64748B</color>
+    <color name="divider_line">#E2E8F0</color>
 </resources>
