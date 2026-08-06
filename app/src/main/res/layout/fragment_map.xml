@@ -4,18 +4,71 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Google Map Container -->
+    <!-- Primary Google Map View -->
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-    <!-- Category Quick Filters Bar Overlay -->
+    <!-- Fallback / Simulated Interactive City Map View (Visible if Maps API Key is not configured) -->
+    <RelativeLayout
+        android:id="@+id/layoutFallbackMap"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#E2E8F0">
+
+        <!-- Grid Lines for City Map Simulation -->
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.2"
+            android:scaleType="centerCrop"
+            android:src="@android:drawable/ic_dialog_map"
+            app:tint="@color/primary_brand" />
+
+        <!-- Center Map Watermark & Info -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🗺️ Live City Hazard Map"
+                android:textColor="@color/primary_brand"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="Interactive pins plotted by GPS coordinates"
+                android:textColor="@color/text_secondary"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Interactive Pins Container -->
+        <LinearLayout
+            android:id="@+id/layoutPinsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="100dp"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:padding="16dp" />
+    </RelativeLayout>
+
+    <!-- Top Category Quick Filters Bar Overlay -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="8dp"
         android:clipToPadding="false"
+        android:padding="12dp"
         android:scrollbars="none">
 
         <com.google.android.material.chip.ChipGroup
@@ -62,7 +115,7 @@
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- Bottom Sheet Details preview when marker selected -->
+    <!-- Bottom Sheet Details Card when pin selected -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomSheetCard"
         android:layout_width="match_parent"
@@ -70,8 +123,8 @@
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:visibility="gone"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="12dp"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="16dp"
         app:strokeWidth="1dp"
         app:strokeColor="@color/divider_line">
 
@@ -79,21 +132,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:id="@+id/sheetCategoryBadge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_badge_rounded"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="5dp"
                     android:text="🕳️ POTHOLE"
                     android:textColor="@color/white"
                     android:textSize="12sp"
@@ -105,8 +158,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/bg_badge_rounded"
-                    android:paddingHorizontal="10dp"
-                    android:paddingVertical="4dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="5dp"
                     android:text="HIGH SEVERITY"
                     android:textColor="@color/white"
                     android:textSize="12sp"
@@ -117,10 +170,10 @@
                 android:id="@+id/sheetTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:text="Issue Title Placeholder"
                 android:textColor="@color/text_primary"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <TextView
@@ -129,17 +182,19 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
                 android:text="📍 45 Main Street, Sector 4"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp" />
+                android:textColor="@color/primary_blue"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnViewDetails"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="14dp"
                 android:backgroundTint="@color/primary_blue"
-                android:text="View Full Issue Details &amp; Verify"
-                android:textColor="@color/white" />
+                android:text="View Full Details &amp; Community Verify"
+                android:textColor="@color/white"
+                app:cornerRadius="12dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
