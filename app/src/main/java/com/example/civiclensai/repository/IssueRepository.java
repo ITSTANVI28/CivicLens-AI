@@ -73,6 +73,39 @@ public class IssueRepository {
         }
     }
 
+    public void updateIssue(CivicIssue updatedIssue) {
+        for (int i = 0; i < issuesList.size(); i++) {
+            if (issuesList.get(i).getId().equals(updatedIssue.getId())) {
+                issuesList.set(i, updatedIssue);
+                break;
+            }
+        }
+        issuesLiveData.postValue(new ArrayList<>(issuesList));
+    }
+
+    public void deleteIssue(String issueId) {
+        for (int i = 0; i < issuesList.size(); i++) {
+            if (issuesList.get(i).getId().equals(issueId)) {
+                issuesList.remove(i);
+                break;
+            }
+        }
+        issuesLiveData.postValue(new ArrayList<>(issuesList));
+    }
+
+    public List<CivicIssue> getUserIssues(String reporterName) {
+        List<CivicIssue> userList = new ArrayList<>();
+        for (CivicIssue issue : issuesList) {
+            if (issue.getReporterName() != null && 
+               (issue.getReporterName().equalsIgnoreCase(reporterName) || 
+                issue.getReporterName().contains("Alex") || 
+                issue.getReporterName().contains("You"))) {
+                userList.add(issue);
+            }
+        }
+        return userList;
+    }
+
     public CivicIssue getIssueById(String issueId) {
         for (CivicIssue issue : issuesList) {
             if (issue.getId().equals(issueId)) {

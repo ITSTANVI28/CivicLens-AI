@@ -1,5 +1,6 @@
 package com.example.civiclensai;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,13 +11,17 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.civiclensai.databinding.ActivityMainBinding;
 import com.example.civiclensai.ui.FeedFragment;
-import com.example.civiclensai.ui.LeaderboardFragment;
 import com.example.civiclensai.ui.MapFragment;
 import com.example.civiclensai.ui.ReportFragment;
+import com.example.civiclensai.ui.auth.LoginActivity;
+import com.example.civiclensai.ui.myreports.MyReportsFragment;
+import com.example.civiclensai.ui.profile.ProfileFragment;
+import com.example.civiclensai.utils.SessionManager;
 
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,10 +29,18 @@ public class MainActivity extends AppCompatActivity {
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        // Setup ViewPager2 Adapter
+        sessionManager = new SessionManager(this);
+
+        if (!sessionManager.isLoggedIn()) {
+            startActivity(new Intent(this, LoginActivity.class));
+            finish();
+            return;
+        }
+
+        // Setup 5-page ViewPager2 Adapter
         MainPagerAdapter pagerAdapter = new MainPagerAdapter(this);
         binding.viewPager.setAdapter(pagerAdapter);
-        binding.viewPager.setUserInputEnabled(false); // Disable swipe to avoid gesture conflicts with Google Maps
+        binding.viewPager.setUserInputEnabled(false);
 
         // Synchronize BottomNavigationView with ViewPager2
         binding.bottomNavigation.setOnItemSelectedListener(item -> {
@@ -41,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
             } else if (itemId == R.id.nav_report) {
                 binding.viewPager.setCurrentItem(2, false);
                 return true;
-            } else if (itemId == R.id.nav_leaderboard) {
+            } else if (itemId == R.id.nav_my_reports) {
                 binding.viewPager.setCurrentItem(3, false);
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                binding.viewPager.setCurrentItem(4, false);
                 return true;
             }
             return false;
@@ -56,7 +72,8 @@ public class MainActivity extends AppCompatActivity {
                     case 0: binding.bottomNavigation.setSelectedItemId(R.id.nav_map); break;
                     case 1: binding.bottomNavigation.setSelectedItemId(R.id.nav_feed); break;
                     case 2: binding.bottomNavigation.setSelectedItemId(R.id.nav_report); break;
-                    case 3: binding.bottomNavigation.setSelectedItemId(R.id.nav_leaderboard); break;
+                    case 3: binding.bottomNavigation.setSelectedItemId(R.id.nav_my_reports); break;
+                    case 4: binding.bottomNavigation.setSelectedItemId(R.id.nav_profile); break;
                 }
             }
         });
@@ -75,14 +92,15 @@ public class MainActivity extends AppCompatActivity {
                 case 0: return new MapFragment();
                 case 1: return new FeedFragment();
                 case 2: return new ReportFragment();
-                case 3: return new LeaderboardFragment();
+                case 3: return new MyReportsFragment();
+                case 4: return new ProfileFragment();
                 default: return new MapFragment();
             }
         }
 
         @Override
         public int getItemCount() {
-            return 4;
+            return 5;
         }
     }
 }

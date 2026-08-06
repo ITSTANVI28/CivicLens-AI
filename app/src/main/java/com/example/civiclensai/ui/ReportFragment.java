@@ -2,26 +2,53 @@ package com.example.civiclensai.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import com.example.civiclensai.ai.GeminiTriageService;
 import com.example.civiclensai.databinding.FragmentReportBinding;
 import com.example.civiclensai.models.CivicIssue;
 import com.example.civiclensai.models.IssueCategory;
 import com.example.civiclensai.models.IssueSeverity;
 import com.example.civiclensai.repository.IssueRepository;
+import com.example.civiclensai.utils.NotificationHelper;
+import com.example.civiclensai.utils.SessionManager;
+
+import java.io.IOException;
 
 public class ReportFragment extends Fragment {
 
     private FragmentReportBinding binding;
     private Bitmap capturedBitmap;
     private GeminiTriageService.TriageResult currentTriageResult;
+    private SessionManager sessionManager;
+
+    private final ActivityResultLauncher<String> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null && getActivity() != null) {
+                    try {
+                        capturedBitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+                        binding.ivPreview.setImageBitmap(capturedBitmap);
+                        binding.layoutPhotoPlaceholder.setVisibility(View.GONE);
+                        Toast.makeText(requireContext(), "🖼️ Image selected from gallery!", Toast.LENGTH_SHORT).show();
+                    } catch (IOException e) {
+                        Toast.makeText(requireContext(), "Error loading image from gallery.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
 
     @Nullable
     @Override
@@ -33,29 +60,46 @@ public class ReportFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        sessionManager = new SessionManager(requireContext());
 
-        // Photo Card Click Handler
-        binding.cardPhotoPicker.setOnClickListener(v -> createMockPhotoCaptured());
+        setupCategorySpinner();
 
-        // Run Gemini AI Triage Button
+        binding.btnCamera.setOnClickListener(v -> createMockPhotoCaptured("Camera"));
+        binding.btnGallery.setOnClickListener(v -> galleryLauncher.launch("image/*"));
+        binding.cardPhotoPicker.setOnClickListener(v -> createMockPhotoCaptured("Camera"));
+
+        binding.btnAutoLocation.setOnClickListener(v -> autoDetectGpsLocation());
+
         binding.btnAiAnalyze.setOnClickListener(v -> {
             if (capturedBitmap == null) {
-                createMockPhotoCaptured();
+                createMockPhotoCaptured("Camera");
             }
             runAiTriage();
         });
 
-        // Submit Issue Button
         binding.btnSubmitIssue.setOnClickListener(v -> submitIssueReport());
     }
 
-    private void createMockPhotoCaptured() {
-        // Create a 400x400 sample bitmap for testing
+    private void setupCategorySpinner() {
+        String[] categories = {"🕳️ Pothole & Road Hazard", "🧹 Garbage & Waste", "💧 Water Leak & Drainage", "💡 Broken Streetlight", "⚠️ Open Manhole Hazard", "🏛️ General Civic Issue"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, categories);
+        binding.spinnerCategory.setAdapter(adapter);
+    }
+
+    private void createMockPhotoCaptured(String source) {
         capturedBitmap = Bitmap.createBitmap(400, 400, Bitmap.Config.ARGB_8888);
         capturedBitmap.eraseColor(Color.LTGRAY);
         binding.ivPreview.setImageBitmap(capturedBitmap);
         binding.layoutPhotoPlaceholder.setVisibility(View.GONE);
-        Toast.makeText(requireContext(), "📷 Photo captured! Ready for Gemini AI analysis.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "📷 Photo captured from " + source + "! Ready for AI triage.", Toast.LENGTH_SHORT).show();
+    }
+
+    private void autoDetectGpsLocation() {
+        // Simulates FusedLocationProviderClient GPS Auto Detect
+        double lat = 12.9716 + (Math.random() - 0.5) * 0.02;
+        double lng = 77.5946 + (Math.random() - 0.5) * 0.02;
+        binding.etAddress.setText("📍 GPS Auto-Detected: " + String.format("%.4f, %.4f", lat, lng) + " (MG Road Sector)");
+        Toast.makeText(requireContext(), "📍 GPS Location Auto-Detected!", Toast.LENGTH_SHORT).show();
     }
 
     private void runAiTriage() {
@@ -70,19 +114,11 @@ public class ReportFragment extends Fragment {
                 binding.btnAiAnalyze.setEnabled(true);
                 currentTriageResult = result;
 
-                binding.cardAiResult.setVisibility(View.VISIBLE);
-                binding.tvAiCategory.setText(result.category.getEmoji() + " " + result.category.getDisplayName());
-                binding.tvAiSeverity.setText(result.severity.getLabel() + " SEVERITY");
-
-                try {
-                    binding.tvAiSeverity.setBackgroundColor(Color.parseColor(result.severity.getHexColor()));
-                } catch (Exception ignored) {}
-
                 binding.etTitle.setText(result.title);
                 binding.etDescription.setText(result.description);
-                binding.tvDepartment.setText("Routing to: " + result.department);
+                binding.spinnerCategory.setSelection(result.category.ordinal());
 
-                Toast.makeText(requireContext(), "✨ Gemini AI Triage Complete!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "✨ Gemini AI Vision Triage Complete!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -101,13 +137,13 @@ public class ReportFragment extends Fragment {
         String address = binding.etAddress.getText() != null ? binding.etAddress.getText().toString().trim() : "MG Road Sector";
 
         if (title.isEmpty()) {
-            Toast.makeText(requireContext(), "Please run Gemini AI analysis or enter a title.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), "Please enter an issue title or run AI triage.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        IssueCategory category = currentTriageResult != null ? currentTriageResult.category : IssueCategory.POTHOLE;
+        IssueCategory category = IssueCategory.values()[Math.min(binding.spinnerCategory.getSelectedItemPosition(), IssueCategory.values().length - 1)];
         IssueSeverity severity = currentTriageResult != null ? currentTriageResult.severity : IssueSeverity.HIGH;
-        String dept = currentTriageResult != null ? currentTriageResult.department : "Public Works Dept";
+        String dept = currentTriageResult != null ? currentTriageResult.department : category.getDefaultDepartment();
 
         CivicIssue newIssue = new CivicIssue(
                 "iss_" + System.currentTimeMillis(),
@@ -115,19 +151,24 @@ public class ReportFragment extends Fragment {
                 desc,
                 category,
                 severity,
-                12.9730 + (Math.random() - 0.5) * 0.02, // Random coordinate near city center
-                77.5950 + (Math.random() - 0.5) * 0.02,
+                12.9716 + (Math.random() - 0.5) * 0.02,
+                77.5946 + (Math.random() - 0.5) * 0.02,
                 address,
                 "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=600",
-                "You (Citizen)",
+                sessionManager.getUserName(),
                 dept
         );
 
         IssueRepository.getInstance().addIssue(newIssue);
-        Toast.makeText(requireContext(), "🎉 Civic Issue Published to Live City Map!", Toast.LENGTH_LONG).show();
+        sessionManager.addKarmaPoints(50);
 
-        // Reset form fields
-        binding.cardAiResult.setVisibility(View.GONE);
+        // Show System Notification
+        NotificationHelper.showReportSubmittedNotification(requireContext(), title);
+        Toast.makeText(requireContext(), "🎉 Report Submitted Successfully! (+50 Karma Points)", Toast.LENGTH_LONG).show();
+
+        // Reset Form
+        binding.etTitle.setText("");
+        binding.etDescription.setText("");
         binding.layoutPhotoPlaceholder.setVisibility(View.VISIBLE);
         binding.ivPreview.setImageDrawable(null);
         capturedBitmap = null;

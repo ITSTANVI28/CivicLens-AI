@@ -38,6 +38,26 @@
         </activity>
 
         <activity
+            android:name=".ui.auth.LoginActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.auth.RegisterActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.auth.ForgotPasswordActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.profile.EditProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ui.myreports.EditIssueActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ui.IssueDetailActivity"
             android:exported="false"
             android:parentActivityName=".MainActivity" />

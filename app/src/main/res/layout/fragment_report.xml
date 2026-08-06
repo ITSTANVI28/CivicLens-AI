@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📷 Snap &amp; Report Civic Hazard"
+            android:text="📍 Report Civic Issue"
             android:textColor="@color/text_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -24,18 +24,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Upload a photo. Gemini AI will automatically classify the issue type, hazard level, and route it to the right department."
+            android:text="Take a photo from camera or pick from gallery. Auto-detect GPS location and submit to city map."
             android:textColor="@color/text_secondary"
             android:textSize="13sp" />
 
-        <!-- Photo Selector Card -->
+        <!-- Photo Picker Buttons Bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnCamera"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:text="📷 Camera"
+                android:textColor="@color/primary_blue"
+                app:cornerRadius="12dp"
+                app:strokeColor="@color/primary_blue" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnGallery"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:layout_weight="1"
+                android:text="🖼️ Gallery"
+                android:textColor="@color/primary_blue"
+                app:cornerRadius="12dp"
+                app:strokeColor="@color/primary_blue" />
+
+        </LinearLayout>
+
+        <!-- Photo Preview Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardPhotoPicker"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="180dp"
+            android:layout_marginTop="12dp"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
+            app:cardElevation="2dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/divider_line">
 
@@ -47,9 +79,7 @@
                     android:id="@+id/ivPreview"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:src="@android:drawable/ic_menu_camera"
-                    app:tint="@color/text_secondary" />
+                    android:scaleType="centerCrop" />
 
                 <LinearLayout
                     android:id="@+id/layoutPhotoPlaceholder"
@@ -60,17 +90,18 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:src="@android:drawable/ic_menu_camera"
                         app:tint="@color/primary_blue" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Tap to Take Photo or Select Image"
+                        android:layout_marginTop="6dp"
+                        android:text="Tap Camera or Gallery above"
                         android:textColor="@color/primary_blue"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </FrameLayout>
@@ -80,14 +111,13 @@
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAiAnalyze"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:layout_marginTop="16dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="14dp"
             android:backgroundTint="@color/primary_blue"
             android:text="✨ Run Gemini AI Vision Triage"
             android:textColor="@color/white"
-            android:textSize="15sp"
-            app:cornerRadius="12dp"
-            app:icon="@android:drawable/ic_menu_compass" />
+            android:textSize="14sp"
+            app:cornerRadius="12dp" />
 
         <!-- AI Progress Bar -->
         <ProgressBar
@@ -95,119 +125,86 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:visibility="gone" />
 
-        <!-- AI Analysis Result Card -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cardAiResult"
+        <!-- Category Dropdown Selector -->
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:visibility="gone"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            app:strokeColor="@color/accent_teal"
-            app:strokeWidth="2dp">
+            android:text="Select Issue Category:"
+            android:textColor="@color/text_primary"
+            android:textStyle="bold" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+        <Spinner
+            android:id="@+id/spinnerCategory"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/bg_badge_rounded"
+            android:paddingHorizontal="12dp" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="🤖 Gemini AI Triage Breakdown"
-                    android:textColor="@color/primary_blue"
-                    android:textSize="14sp"
-                    android:textStyle="bold" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/tvAiCategory"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_rounded"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="4dp"
-                        android:text="🕳️ POTHOLE"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/tvAiSeverity"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_badge_rounded"
-                        android:paddingHorizontal="10dp"
-                        android:paddingVertical="4dp"
-                        android:text="HIGH SEVERITY"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="AI Issue Headline">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etTitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapSentences" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:hint="Hazard Details / Summary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etDescription"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textMultiLine"
-                        android:minLines="2" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-                <TextView
-                    android:id="@+id/tvDepartment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Routing to: Public Works Department"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="13sp"
-                    android:textStyle="italic" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
-
-        <!-- Location Picker -->
+        <!-- Title & Description Fields -->
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="📍 Location / Address">
+            android:layout_marginTop="12dp"
+            android:hint="Issue Headline / Title">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etAddress"
+                android:id="@+id/etTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="45 Main Street, MG Road Sector" />
+                android:inputType="textCapSentences" />
         </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:hint="Issue Description">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etDescription"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="textMultiLine"
+                android:minLines="2" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Location Bar with Auto Detect Button -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="📍 Location Address">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etAddress"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="45 Main Street, MG Road Sector" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnAutoLocation"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
+                android:layout_height="54dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="4dp"
+                android:text="📍 GPS"
+                android:textColor="@color/primary_blue"
+                app:cornerRadius="10dp" />
+        </LinearLayout>
 
         <!-- Final Submit Button -->
         <com.google.android.material.button.MaterialButton
@@ -217,7 +214,7 @@
             android:layout_marginTop="20dp"
             android:layout_marginBottom="24dp"
             android:backgroundTint="@color/severity_low"
-            android:text="🚀 Publish Issue to Live City Map"
+            android:text="🚀 Submit Civic Report"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
