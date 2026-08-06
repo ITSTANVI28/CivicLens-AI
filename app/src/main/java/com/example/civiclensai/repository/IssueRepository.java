@@ -1,0 +1,150 @@
+package com.example.civiclensai.repository;
+
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+
+import com.example.civiclensai.models.CivicIssue;
+import com.example.civiclensai.models.IssueCategory;
+import com.example.civiclensai.models.IssueSeverity;
+import com.example.civiclensai.models.IssueStatus;
+import com.example.civiclensai.models.VerificationModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class IssueRepository {
+
+    private static IssueRepository instance;
+    private final MutableLiveData<List<CivicIssue>> issuesLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final MutableLiveData<List<VerificationModel>> verificationsLiveData = new MutableLiveData<>(new ArrayList<>());
+    private final List<CivicIssue> issuesList = new ArrayList<>();
+
+    private IssueRepository() {
+        seedSampleData();
+    }
+
+    public static synchronized IssueRepository getInstance() {
+        if (instance == null) {
+            instance = new IssueRepository();
+        }
+        return instance;
+    }
+
+    public LiveData<List<CivicIssue>> getIssues() {
+        return issuesLiveData;
+    }
+
+    public void addIssue(CivicIssue issue) {
+        if (issue.getId() == null || issue.getId().isEmpty()) {
+            issue.setId("iss_" + System.currentTimeMillis());
+        }
+        issuesList.add(0, issue); // Add to top of feed
+        issuesLiveData.postValue(new ArrayList<>(issuesList));
+    }
+
+    public void upvoteIssue(String issueId) {
+        for (CivicIssue issue : issuesList) {
+            if (issue.getId().equals(issueId)) {
+                issue.setUpvotesCount(issue.getUpvotesCount() + 1);
+                break;
+            }
+        }
+        issuesLiveData.postValue(new ArrayList<>(issuesList));
+    }
+
+    public void addVerification(VerificationModel verification) {
+        List<VerificationModel> current = verificationsLiveData.getValue();
+        if (current == null) current = new ArrayList<>();
+        current.add(0, verification);
+        verificationsLiveData.postValue(current);
+
+        // Update issue status if vote is FIXED
+        if ("FIXED".equalsIgnoreCase(verification.getStatusVote())) {
+            for (CivicIssue issue : issuesList) {
+                if (issue.getId().equals(verification.getIssueId())) {
+                    issue.setConfirmationsCount(issue.getConfirmationsCount() + 1);
+                    if (issue.getConfirmationsCount() >= 3) {
+                        issue.setStatus(IssueStatus.RESOLVED);
+                    }
+                    break;
+                }
+            }
+            issuesLiveData.postValue(new ArrayList<>(issuesList));
+        }
+    }
+
+    public CivicIssue getIssueById(String issueId) {
+        for (CivicIssue issue : issuesList) {
+            if (issue.getId().equals(issueId)) {
+                return issue;
+            }
+        }
+        return null;
+    }
+
+    private void seedSampleData() {
+        CivicIssue item1 = new CivicIssue(
+                "iss_101",
+                "Large Asphalt Pothole near Main Junction",
+                "Deep crater causing vehicle slowing and hazard for two-wheelers.",
+                IssueCategory.POTHOLE,
+                IssueSeverity.HIGH,
+                12.9716, 77.5946,
+                "45 Main St, MG Road Sector",
+                "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=600",
+                "Alex Citizen",
+                "Public Works Department"
+        );
+        item1.setUpvotesCount(24);
+        item1.setConfirmationsCount(5);
+
+        CivicIssue item2 = new CivicIssue(
+                "iss_102",
+                "Overflowing Waste Bin near Park",
+                "Uncollected municipal trash spilling onto public walking track.",
+                IssueCategory.GARBAGE,
+                IssueSeverity.MEDIUM,
+                12.9750, 77.5990,
+                "Central Park Gate 2, City Center",
+                "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=600",
+                "Priya Sharma",
+                "Sanitation & Waste Dept"
+        );
+        item2.setUpvotesCount(18);
+
+        CivicIssue item3 = new CivicIssue(
+                "iss_103",
+                "High-Pressure Underground Water Leak",
+                "Clean water leaking from main pipeline onto road surface.",
+                IssueCategory.WATER_LEAK,
+                IssueSeverity.CRITICAL,
+                12.9680, 77.5910,
+                "7th Cross, Indiranagar",
+                "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600",
+                "Rahul Verma",
+                "Water Supply & Sewage Board"
+        );
+        item3.setUpvotesCount(42);
+
+        CivicIssue item4 = new CivicIssue(
+                "iss_104",
+                "Non-Functional Streetlight Unit",
+                "Dark stretch of road due to damaged LED light pole.",
+                IssueCategory.STREETLIGHT,
+                IssueSeverity.LOW,
+                12.9800, 77.6020,
+                "Old Airport Road, Ward 12",
+                "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=600",
+                "Anita Roy",
+                "Electrical Dept"
+        );
+        item4.setStatus(IssueStatus.RESOLVED);
+        item4.setUpvotesCount(9);
+
+        issuesList.add(item1);
+        issuesList.add(item2);
+        issuesList.add(item3);
+        issuesList.add(item4);
+        issuesLiveData.setValue(new ArrayList<>(issuesList));
+    }
+}

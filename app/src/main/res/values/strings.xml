@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">CivicLens AI</string>
+    <string name="tab_map">Live Map</string>
+    <string name="tab_report">Report Issue</string>
+    <string name="tab_feed">Issue Feed</string>
+    <string name="tab_leaderboard">Civic Karma</string>
 </resources>

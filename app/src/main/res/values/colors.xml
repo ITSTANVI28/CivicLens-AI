@@ -2,4 +2,22 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    
+    <!-- Primary CivicLens Palette -->
+    <color name="primary_blue">#0D47A1</color>
+    <color name="primary_blue_light">#1976D2</color>
+    <color name="accent_teal">#00B0FF</color>
+    
+    <!-- Severity & Status Colors -->
+    <color name="severity_critical">#D50000</color>
+    <color name="severity_high">#FF6D00</color>
+    <color name="severity_medium">#FFD600</color>
+    <color name="severity_low">#00C853</color>
+
+    <!-- Backgrounds & Surfaces -->
+    <color name="bg_light">#F8F9FA</color>
+    <color name="surface_card">#FFFFFF</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="divider_line">#E0E0E0</color>
 </resources>
