@@ -6,10 +6,13 @@
     android:background="@color/bg_light"
     android:orientation="vertical">
 
-    <!-- Filter Chips Header -->
+    <!-- Filter Chips Header Container -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:clipToPadding="false"
+        android:elevation="2dp"
         android:paddingHorizontal="12dp"
         android:paddingVertical="8dp"
         android:scrollbars="none">
@@ -26,44 +29,59 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="All (4)" />
+                android:text="🌐 All Issues"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/primary_blue"
+                app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipPothole"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🕳️ Potholes" />
+                android:text="🕳️ Potholes"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipGarbage"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🧹 Garbage" />
+                android:text="🧹 Garbage"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipWater"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💧 Water" />
+                android:text="💧 Water Leaks"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipLights"
                 style="@style/Widget.MaterialComponents.Chip.Choice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💡 Lights" />
+                android:text="💡 Streetlights"
+                app:chipBackgroundColor="@color/white"
+                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeWidth="1dp" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- RecyclerView Issue Feed -->
+    <!-- Issue Feed RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvIssues"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"
-        android:padding="12dp" />
+        android:padding="16dp" />
 
 </LinearLayout>

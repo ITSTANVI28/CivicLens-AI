@@ -4,20 +4,22 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
+    app:cardBackgroundColor="@color/white"
     app:cardCornerRadius="20dp"
-    app:cardElevation="4dp"
+    app:cardElevation="6dp"
     app:strokeWidth="1dp"
     app:strokeColor="@color/divider_line">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:orientation="vertical">
 
-        <!-- Image Banner -->
+        <!-- Image Header Banner -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="190dp">
+            android:layout_height="195dp">
 
             <ImageView
                 android:id="@+id/ivIssuePhoto"
@@ -25,6 +27,12 @@
                 android:layout_height="match_parent"
                 android:scaleType="centerCrop"
                 android:src="@android:drawable/ic_menu_gallery" />
+
+            <!-- Dark gradient overlay at top of image for maximum badge contrast -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:background="@drawable/bg_gradient_top_shadow" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -59,10 +67,11 @@
             </LinearLayout>
         </FrameLayout>
 
-        <!-- Body Info -->
+        <!-- Information Body -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical"
             android:padding="16dp">
 
@@ -71,7 +80,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Issue Title Placeholder"
-                android:textColor="@color/text_primary"
+                android:textColor="#0F172A"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -79,29 +88,29 @@
                 android:id="@+id/tvIssueDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
                 android:ellipsize="end"
+                android:lineSpacingExtra="3dp"
                 android:maxLines="2"
                 android:text="Description details placeholder describing the hazard..."
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"
-                android:lineSpacingExtra="2dp" />
+                android:textColor="#475569"
+                android:textSize="13sp" />
 
             <TextView
                 android:id="@+id/tvIssueAddress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="10dp"
                 android:text="📍 45 Main Street, Sector 4"
-                android:textColor="@color/primary_blue"
-                android:textSize="12sp"
+                android:textColor="#2563EB"
+                android:textSize="13sp"
                 android:textStyle="bold" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="12dp"
-                android:layout_marginBottom="12dp"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="14dp"
                 android:background="@color/divider_line" />
 
             <LinearLayout
@@ -116,7 +125,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="👍 24 Upvotes"
-                    android:textColor="@color/text_primary"
+                    android:textColor="#0F172A"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
@@ -125,11 +134,13 @@
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="👍 Upvote"
-                    android:textColor="@color/primary_blue"
+                    android:text="👍 UPVOTE"
+                    android:textColor="#2563EB"
                     android:textSize="12sp"
+                    android:textStyle="bold"
                     app:cornerRadius="20dp"
-                    app:strokeColor="@color/primary_blue" />
+                    app:strokeColor="#2563EB"
+                    app:strokeWidth="1.5dp" />
 
             </LinearLayout>
         </LinearLayout>

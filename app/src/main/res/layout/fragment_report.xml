@@ -15,20 +15,20 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📍 Report Civic Issue"
-            android:textColor="@color/text_primary"
-            android:textSize="20sp"
+            android:text="📍 Report Civic Hazard"
+            android:textColor="#0F172A"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Take a photo from camera or pick from gallery. Auto-detect GPS location and submit to city map."
-            android:textColor="@color/text_secondary"
+            android:text="Snap a photo or pick from gallery. Gemini AI automatically triages the issue and routes it to municipal crews."
+            android:textColor="#64748B"
             android:textSize="13sp" />
 
-        <!-- Photo Picker Buttons Bar -->
+        <!-- Photo Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -39,24 +39,28 @@
                 android:id="@+id/btnCamera"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_weight="1"
                 android:text="📷 Camera"
-                android:textColor="@color/primary_blue"
+                android:textColor="#2563EB"
+                android:textStyle="bold"
                 app:cornerRadius="12dp"
-                app:strokeColor="@color/primary_blue" />
+                app:strokeColor="#2563EB"
+                app:strokeWidth="1.5dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGallery"
                 style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="10dp"
                 android:layout_weight="1"
                 android:text="🖼️ Gallery"
-                android:textColor="@color/primary_blue"
+                android:textColor="#2563EB"
+                android:textStyle="bold"
                 app:cornerRadius="12dp"
-                app:strokeColor="@color/primary_blue" />
+                app:strokeColor="#2563EB"
+                app:strokeWidth="1.5dp" />
 
         </LinearLayout>
 
@@ -66,14 +70,16 @@
             android:layout_width="match_parent"
             android:layout_height="180dp"
             android:layout_marginTop="12dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/divider_line">
 
             <FrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:background="@color/white">
 
                 <ImageView
                     android:id="@+id/ivPreview"
@@ -90,33 +96,34 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:src="@android:drawable/ic_menu_camera"
-                        app:tint="@color/primary_blue" />
+                        app:tint="#2563EB" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Tap Camera or Gallery above"
-                        android:textColor="@color/primary_blue"
+                        android:text="Tap Camera or Gallery Above"
+                        android:textColor="#2563EB"
                         android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </FrameLayout>
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- AI Analyze Action Button -->
+        <!-- AI Vision Triage Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAiAnalyze"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="14dp"
-            android:backgroundTint="@color/primary_blue"
+            android:layout_height="52dp"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#2563EB"
             android:text="✨ Run Gemini AI Vision Triage"
             android:textColor="@color/white"
-            android:textSize="14sp"
+            android:textSize="15sp"
+            android:textStyle="bold"
             app:cornerRadius="12dp" />
 
         <!-- AI Progress Bar -->
@@ -128,97 +135,124 @@
             android:layout_marginTop="8dp"
             android:visibility="gone" />
 
-        <!-- Category Dropdown Selector -->
-        <TextView
+        <!-- Form Input Card -->
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Select Issue Category:"
-            android:textColor="@color/text_primary"
-            android:textStyle="bold" />
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/divider_line">
 
-        <Spinner
-            android:id="@+id/spinnerCategory"
-            android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginTop="4dp"
-            android:background="@drawable/bg_badge_rounded"
-            android:paddingHorizontal="12dp" />
-
-        <!-- Title & Description Fields -->
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:hint="Issue Headline / Title">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etTitle"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="textCapSentences" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Issue Description">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etDescription"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textMultiLine"
-                android:minLines="2" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <!-- Location Bar with Auto Detect Button -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:hint="📍 Location Address">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/etAddress"
+                <!-- Category Spinner -->
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="45 Main Street, MG Road Sector" />
-            </com.google.android.material.textfield.TextInputLayout>
+                    android:text="Select Issue Category:"
+                    android:textColor="#0F172A"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnAutoLocation"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="wrap_content"
-                android:layout_height="54dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="4dp"
-                android:text="📍 GPS"
-                android:textColor="@color/primary_blue"
-                app:cornerRadius="10dp" />
-        </LinearLayout>
+                <Spinner
+                    android:id="@+id/spinnerCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_badge_rounded"
+                    android:paddingHorizontal="12dp" />
+
+                <!-- Title Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:hint="Issue Headline / Title">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:textColor="#0F172A" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Description Input -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:hint="Issue Description &amp; Details">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textMultiLine"
+                        android:minLines="2"
+                        android:textColor="#0F172A" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Location Address Input & GPS Auto Detect -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:hint="📍 Location Address">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etAddress"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="45 Main Street, MG Road Sector"
+                            android:textColor="#0F172A" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAutoLocation"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="54dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="4dp"
+                        android:text="📍 GPS"
+                        android:textColor="#2563EB"
+                        android:textStyle="bold"
+                        app:cornerRadius="10dp"
+                        app:strokeColor="#2563EB" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Final Submit Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmitIssue"
             android:layout_width="match_parent"
-            android:layout_height="54dp"
+            android:layout_height="56dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="24dp"
-            android:backgroundTint="@color/severity_low"
+            android:backgroundTint="#059669"
             android:text="🚀 Submit Civic Report"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="14dp" />
 
     </LinearLayout>
 </ScrollView>

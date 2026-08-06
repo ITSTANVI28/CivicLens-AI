@@ -16,8 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="🏆 Community Civic Karma"
-            android:textColor="@color/text_primary"
-            android:textSize="20sp"
+            android:textColor="#0F172A"
+            android:textSize="22sp"
             android:textStyle="bold" />
 
         <TextView
@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             android:text="Earn points by reporting genuine issues, verifying community fixes, and keeping your city safe."
-            android:textColor="@color/text_secondary"
+            android:textColor="#64748B"
             android:textSize="13sp" />
 
         <!-- User Stats Card -->
@@ -33,9 +33,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="6dp"
-            app:cardBackgroundColor="@color/primary_blue">
+            app:cardBackgroundColor="#2563EB"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="6dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -47,7 +47,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="YOUR CIVIC KARMA"
-                    android:textColor="#B3FFFFFF"
+                    android:textColor="#E0E7FF"
                     android:textSize="12sp"
                     android:textStyle="bold" />
 
@@ -98,22 +98,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="🌟 Top Community Champions"
-            android:textColor="@color/text_primary"
-            android:textSize="16sp"
+            android:textColor="#0F172A"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="4dp"
             app:strokeWidth="1dp"
             app:strokeColor="@color/divider_line">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -124,17 +126,17 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
                         android:background="@drawable/bg_badge_rounded"
                         android:gravity="center"
                         android:text="🥇"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="14dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -142,14 +144,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Alex Citizen"
-                            android:textColor="@color/text_primary"
+                            android:textColor="#0F172A"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="28 Verified Reports"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="#64748B"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -157,7 +160,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="840 pts"
-                        android:textColor="@color/primary_blue"
+                        android:textColor="#2563EB"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -175,17 +179,17 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
                         android:background="@drawable/bg_badge_rounded"
                         android:gravity="center"
                         android:text="🥈"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="14dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -193,14 +197,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Priya Sharma"
-                            android:textColor="@color/text_primary"
+                            android:textColor="#0F172A"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="21 Verified Reports"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="#64748B"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -208,7 +213,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="630 pts"
-                        android:textColor="@color/primary_blue"
+                        android:textColor="#2563EB"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -226,17 +232,17 @@
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
                         android:background="@drawable/bg_badge_rounded"
                         android:gravity="center"
                         android:text="🥉"
-                        android:textSize="16sp" />
+                        android:textSize="18sp" />
 
                     <LinearLayout
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="12dp"
+                        android:layout_marginStart="14dp"
                         android:layout_weight="1"
                         android:orientation="vertical">
 
@@ -244,14 +250,15 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rahul Verma"
-                            android:textColor="@color/text_primary"
+                            android:textColor="#0F172A"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="17 Verified Reports"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="#64748B"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -259,7 +266,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="510 pts"
-                        android:textColor="@color/primary_blue"
+                        android:textColor="#2563EB"
+                        android:textSize="15sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 

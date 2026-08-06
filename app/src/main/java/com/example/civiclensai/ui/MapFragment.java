@@ -6,16 +6,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-
-import com.example.civiclensai.R;
 import com.example.civiclensai.databinding.FragmentMapBinding;
 import com.example.civiclensai.models.CivicIssue;
-import com.example.civiclensai.models.IssueCategory;
 import com.example.civiclensai.repository.IssueRepository;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -25,7 +20,6 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +29,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     private FragmentMapBinding binding;
     private GoogleMap googleMap;
     private final Map<Marker, CivicIssue> markerIssueMap = new HashMap<>();
-    private List<CivicIssue> allIssues = new ArrayList<>();
-    private IssueCategory currentFilter = null;
     private CivicIssue selectedIssue;
 
     @Nullable
@@ -49,14 +41,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        try {
-            binding.mapView.onCreate(savedInstanceState);
-            binding.mapView.getMapAsync(this);
-        } catch (Exception e) {
-            binding.mapView.setVisibility(View.GONE);
-            binding.layoutFallbackMap.setVisibility(View.VISIBLE);
-        }
+        binding.mapView.onCreate(savedInstanceState);
+        binding.mapView.getMapAsync(this);
 
         binding.btnViewDetails.setOnClickListener(v -> {
             if (selectedIssue != null) {
@@ -65,110 +51,56 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 startActivity(intent);
             }
         });
-
-        // Setup Map Filters
-        binding.mapChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
-            if (checkedIds.isEmpty() || checkedIds.contains(R.id.chipAll)) {
-                currentFilter = null;
-            } else if (checkedIds.contains(R.id.chipPotholes)) {
-                currentFilter = IssueCategory.POTHOLE;
-            } else if (checkedIds.contains(R.id.chipGarbage)) {
-                currentFilter = IssueCategory.GARBAGE;
-            } else if (checkedIds.contains(R.id.chipWater)) {
-                currentFilter = IssueCategory.WATER_LEAK;
-            } else if (checkedIds.contains(R.id.chipLights)) {
-                currentFilter = IssueCategory.STREETLIGHT;
-            }
-            renderMapMarkers(allIssues);
-        });
-
-        // Observe issues list
-        IssueRepository.getInstance().getIssues().observe(getViewLifecycleOwner(), issues -> {
-            this.allIssues = issues != null ? issues : new ArrayList<>();
-            renderMapMarkers(allIssues);
-        });
     }
 
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         this.googleMap = map;
         googleMap.getUiSettings().setZoomControlsEnabled(true);
-        renderMapMarkers(allIssues);
+
+        // Observe issues from repository
+        IssueRepository.getInstance().getIssues().observe(getViewLifecycleOwner(), this::renderMapMarkers);
     }
 
     private void renderMapMarkers(List<CivicIssue> issues) {
-        if (binding == null || issues == null) return;
+        if (googleMap == null || issues == null) return;
 
-        List<CivicIssue> filtered = new ArrayList<>();
+        googleMap.clear();
+        markerIssueMap.clear();
+
+        LatLng defaultCenter = new LatLng(12.9716, 77.5946); // Center on Bangalore / city center
+
         for (CivicIssue issue : issues) {
-            if (currentFilter == null || issue.getCategory() == currentFilter) {
-                filtered.add(issue);
+            LatLng pos = new LatLng(issue.getLatitude(), issue.getLongitude());
+
+            float hue;
+            switch (issue.getSeverity()) {
+                case CRITICAL: hue = BitmapDescriptorFactory.HUE_RED; break;
+                case HIGH: hue = BitmapDescriptorFactory.HUE_ORANGE; break;
+                case MEDIUM: hue = BitmapDescriptorFactory.HUE_YELLOW; break;
+                case LOW: default: hue = BitmapDescriptorFactory.HUE_GREEN; break;
+            }
+
+            Marker marker = googleMap.addMarker(new MarkerOptions()
+                    .position(pos)
+                    .title(issue.getCategory().getEmoji() + " " + issue.getTitle())
+                    .snippet(issue.getAddress())
+                    .icon(BitmapDescriptorFactory.defaultMarker(hue)));
+
+            if (marker != null) {
+                markerIssueMap.put(marker, issue);
             }
         }
 
-        // Render on Google Map SDK if ready
-        if (googleMap != null) {
-            googleMap.clear();
-            markerIssueMap.clear();
-            LatLng defaultCenter = new LatLng(12.9716, 77.5946);
+        googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultCenter, 13f));
 
-            for (CivicIssue issue : filtered) {
-                LatLng pos = new LatLng(issue.getLatitude(), issue.getLongitude());
-                float hue;
-                switch (issue.getSeverity()) {
-                    case CRITICAL: hue = BitmapDescriptorFactory.HUE_RED; break;
-                    case HIGH: hue = BitmapDescriptorFactory.HUE_ORANGE; break;
-                    case MEDIUM: hue = BitmapDescriptorFactory.HUE_YELLOW; break;
-                    case LOW: default: hue = BitmapDescriptorFactory.HUE_GREEN; break;
-                }
-
-                Marker marker = googleMap.addMarker(new MarkerOptions()
-                        .position(pos)
-                        .title(issue.getCategory().getEmoji() + " " + issue.getTitle())
-                        .snippet(issue.getAddress())
-                        .icon(BitmapDescriptorFactory.defaultMarker(hue)));
-
-                if (marker != null) {
-                    markerIssueMap.put(marker, issue);
-                }
+        googleMap.setOnMarkerClickListener(marker -> {
+            CivicIssue issue = markerIssueMap.get(marker);
+            if (issue != null) {
+                showBottomSheet(issue);
             }
-            googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(defaultCenter, 13f));
-            googleMap.setOnMarkerClickListener(marker -> {
-                CivicIssue issue = markerIssueMap.get(marker);
-                if (issue != null) {
-                    showBottomSheet(issue);
-                }
-                return false;
-            });
-        }
-
-        // Render pins on Interactive Overlay container
-        renderOverlayPinButtons(filtered);
-    }
-
-    private void renderOverlayPinButtons(List<CivicIssue> filtered) {
-        if (binding == null) return;
-        binding.layoutPinsContainer.removeAllViews();
-
-        for (CivicIssue issue : filtered) {
-            Button pinBtn = new Button(requireContext());
-            pinBtn.setText(issue.getCategory().getEmoji() + " " + issue.getSeverity().getLabel());
-            try {
-                pinBtn.setBackgroundColor(Color.parseColor(issue.getSeverity().getHexColor()));
-            } catch (Exception ignored) {}
-            pinBtn.setTextColor(Color.WHITE);
-            pinBtn.setTextSize(11f);
-
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.WRAP_CONTENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-            );
-            params.setMargins(8, 0, 8, 0);
-            pinBtn.setLayoutParams(params);
-
-            pinBtn.setOnClickListener(v -> showBottomSheet(issue));
-            binding.layoutPinsContainer.addView(pinBtn);
-        }
+            return false;
+        });
     }
 
     private void showBottomSheet(CivicIssue issue) {

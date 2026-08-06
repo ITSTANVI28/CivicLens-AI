@@ -27,7 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
-                android:background="#80000000"
+                android:background="#99000000"
                 android:padding="16dp">
 
                 <TextView
@@ -39,7 +39,7 @@
                     android:paddingVertical="6dp"
                     android:text="🕳️ POTHOLE"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -52,7 +52,7 @@
                     android:paddingVertical="6dp"
                     android:text="HIGH SEVERITY"
                     android:textColor="@color/white"
-                    android:textSize="13sp"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
             </LinearLayout>
         </FrameLayout>
@@ -61,15 +61,16 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/bg_light"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <TextView
                 android:id="@+id/tvDetailTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Large Asphalt Pothole near Main Junction"
-                android:textColor="@color/text_primary"
+                android:textColor="#0F172A"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -79,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
                 android:text="📍 45 Main St, MG Road Sector"
-                android:textColor="@color/primary_blue"
+                android:textColor="#2563EB"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -88,23 +89,25 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                app:cardCornerRadius="12dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="14dp"
                 app:cardElevation="2dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/accent_teal">
+                app:strokeColor="@color/divider_line">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="12dp"
-                    android:gravity="center_vertical">
+                    android:padding="14dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="⏱️ Target SLA Resolution:"
-                        android:textColor="@color/text_primary"
+                        android:textColor="#0F172A"
                         android:textStyle="bold" />
 
                     <TextView
@@ -113,7 +116,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="72 Hours SLA"
-                        android:textColor="@color/severity_high"
+                        android:textColor="#EA580C"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -121,9 +124,9 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="20dp"
                 android:text="Hazard Description &amp; Details"
-                android:textColor="@color/text_primary"
+                android:textColor="#0F172A"
                 android:textSize="15sp"
                 android:textStyle="bold" />
 
@@ -131,11 +134,11 @@
                 android:id="@+id/tvDetailDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="6dp"
+                android:lineSpacingExtra="3dp"
                 android:text="Deep crater causing vehicle slowing and hazard for two-wheelers."
-                android:textColor="@color/text_secondary"
-                android:textSize="14sp"
-                android:lineSpacingExtra="2dp" />
+                android:textColor="#475569"
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvDetailDepartment"
@@ -143,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Assigned Department: Public Works Department"
-                android:textColor="@color/text_secondary"
+                android:textColor="#64748B"
                 android:textSize="13sp"
                 android:textStyle="italic" />
 
@@ -157,24 +160,29 @@
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDetailUpvote"
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_height="52dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/primary_blue"
+                    android:backgroundTint="#2563EB"
                     android:text="👍 Upvote (24)"
                     android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
                     app:cornerRadius="12dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerifyStatus"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
-                    android:layout_height="50dp"
+                    android:layout_height="52dp"
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
                     android:text="✅ Confirm / Verify"
-                    android:textColor="@color/primary_blue"
+                    android:textColor="#2563EB"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
                     app:cornerRadius="12dp"
-                    app:strokeColor="@color/primary_blue" />
+                    app:strokeColor="#2563EB"
+                    app:strokeWidth="1.5dp" />
             </LinearLayout>
 
         </LinearLayout>
