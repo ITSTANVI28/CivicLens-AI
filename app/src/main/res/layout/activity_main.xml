@@ -8,12 +8,12 @@
     android:background="@color/bg_light"
     tools:context=".MainActivity">
 
-    <!-- Top Header App Bar -->
+    <!-- Professional Slate Header App Bar -->
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary_dark"
+        android:background="@color/primary_brand"
         app:elevation="4dp"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -21,11 +21,11 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="64dp"
-            android:background="@color/primary_dark"
+            android:background="@color/primary_brand"
             app:title="CivicLens AI 🏛️"
             app:titleTextColor="@color/white"
             app:subtitle="Smart Civic Issue Triage &amp; Resolution"
-            app:subtitleTextColor="#C7D2FE" />
+            app:subtitleTextColor="#94A3B8" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@id/appBarLayout"
         app:layout_constraintBottom_toTopOf="@id/bottomNavigation" />
 
-    <!-- Bottom Navigation View -->
+    <!-- Sleek Bottom Navigation View -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNavigation"
         android:layout_width="match_parent"
@@ -46,7 +46,7 @@
         app:elevation="12dp"
         app:itemIconTint="@color/primary_blue"
         app:itemRippleColor="@color/bg_light"
-        app:itemTextColor="@color/primary_dark"
+        app:itemTextColor="@color/primary_brand"
         app:menu="@menu/bottom_nav_menu"
         app:layout_constraintBottom_toBottomOf="parent" />
 
