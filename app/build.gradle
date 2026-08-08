@@ -37,9 +37,10 @@ dependencies {
     implementation libs.appcompat
     implementation libs.constraintlayout
     implementation libs.material
+    implementation libs.swiperefreshlayout
 
-    // Location & Maps
-    implementation libs.play.services.maps
+    // Location & Maps (OpenStreetMap osmdroid)
+    implementation libs.osmdroid.android
     implementation libs.play.services.location
 
     // CameraX
@@ -48,8 +49,21 @@ dependencies {
     implementation libs.camerax.lifecycle
     implementation libs.camerax.view
 
+    // UI Enhancements (Lottie, Shimmer, CircleImageView, SplashScreen)
+    implementation libs.lottie
+    implementation libs.shimmer
+    implementation libs.circleimageview
+    implementation libs.core.splashscreen
+
+    // Room Database Offline Storage Engine
+    implementation libs.room.runtime
+    annotationProcessor libs.room.compiler
+
     // Image Loading
     implementation libs.glide
+
+    // Background WorkManager Engine
+    implementation libs.work.runtime
 
     // Firebase (optional via BoM)
     implementation platform(libs.firebase.bom)

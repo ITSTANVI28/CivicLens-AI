@@ -1,11 +1,40 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme forcing clean light surfaces for high readability -->
-    <style name="Base.Theme.CivicLensAI" parent="Theme.Material3.Light.NoActionBar">
-        <item name="colorPrimary">@color/primary_blue</item>
-        <item name="colorOnPrimary">@color/white</item>
-        <item name="colorSecondary">@color/accent_teal</item>
+    <!-- Base application theme enforcing Material 3 DayNight / Light guidelines -->
+    <style name="Base.Theme.CivicLensAI" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Primary Color Roles -->
+        <item name="colorPrimary">@color/m3_primary</item>
+        <item name="colorOnPrimary">@color/m3_on_primary</item>
+        <item name="colorPrimaryContainer">@color/m3_primary_container</item>
+        <item name="colorOnPrimaryContainer">@color/m3_on_primary_container</item>
+
+        <!-- Secondary Color Roles -->
+        <item name="colorSecondary">@color/m3_secondary</item>
+        <item name="colorOnSecondary">@color/m3_on_secondary</item>
+        <item name="colorSecondaryContainer">@color/m3_secondary_container</item>
+        <item name="colorOnSecondaryContainer">@color/m3_on_secondary_container</item>
+
+        <!-- Tertiary & Surface Roles -->
+        <item name="colorTertiary">@color/m3_tertiary</item>
+        <item name="colorOnTertiary">@color/m3_on_tertiary</item>
+        <item name="colorSurface">@color/m3_surface</item>
+        <item name="colorOnSurface">@color/m3_on_surface</item>
+        <item name="colorSurfaceVariant">@color/m3_surface_variant</item>
+        <item name="colorOnSurfaceVariant">@color/m3_on_surface_variant</item>
+
+        <!-- Outlines & Backgrounds -->
+        <item name="colorOutline">@color/m3_outline</item>
+        <item name="colorOutlineVariant">@color/m3_outline_variant</item>
         <item name="android:windowBackground">@color/bg_light</item>
+        <item name="android:statusBarColor">@color/primary_brand</item>
+        <item name="android:navigationBarColor">@color/white</item>
     </style>
 
     <style name="Theme.CivicLensAI" parent="Base.Theme.CivicLensAI" />
+
+    <!-- Material 3 Starting Splash Theme -->
+    <style name="Theme.CivicLensAI.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/primary_brand</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_app_logo_png</item>
+        <item name="postSplashScreenTheme">@style/Theme.CivicLensAI</item>
+    </style>
 </resources>

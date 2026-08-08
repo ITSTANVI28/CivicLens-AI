@@ -11,8 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.civiclensai.databinding.FragmentProfileBinding;
+import com.example.civiclensai.models.CivicIssue;
+import com.example.civiclensai.repository.IssueRepository;
 import com.example.civiclensai.ui.auth.LoginActivity;
+import com.example.civiclensai.utils.CivicAnalyticsEngine;
 import com.example.civiclensai.utils.SessionManager;
+
+import java.util.List;
 
 public class ProfileFragment extends Fragment {
 
@@ -54,9 +59,16 @@ public class ProfileFragment extends Fragment {
 
     private void renderProfileData() {
         if (binding == null || sessionManager == null) return;
+        int karma = sessionManager.getKarmaPoints();
         binding.tvProfileName.setText(sessionManager.getUserName());
         binding.tvProfileEmail.setText(sessionManager.getUserEmail());
-        binding.tvProfileKarma.setText("🏅 Civic Karma: " + sessionManager.getKarmaPoints() + " pts");
+        binding.tvProfileKarma.setText("🏅 Civic Karma: " + karma + " pts");
+        binding.tvBadgeLevel.setText(CivicAnalyticsEngine.getBadgeTitleForKarma(karma));
+
+        // Compute City Infrastructure Health metrics
+        List<CivicIssue> issuesList = IssueRepository.getInstance().getIssues().getValue();
+        CivicAnalyticsEngine.CivicHealthMetrics metrics = CivicAnalyticsEngine.computeCityHealth(issuesList);
+        binding.tvCityHealthRating.setText(metrics.statusRating + " (" + metrics.healthScorePercent + "%)");
     }
 
     @Override

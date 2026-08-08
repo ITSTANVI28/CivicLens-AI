@@ -8,16 +8,29 @@ import com.example.civiclensai.models.IssueCategory;
 import com.example.civiclensai.models.IssueSeverity;
 import com.example.civiclensai.models.IssueStatus;
 import com.example.civiclensai.models.VerificationModel;
+import com.example.civiclensai.utils.GeoUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IssueRepository {
 
+    public static final double DEDUPLICATION_RADIUS_METERS = 50.0;
+
     private static IssueRepository instance;
     private final MutableLiveData<List<CivicIssue>> issuesLiveData = new MutableLiveData<>(new ArrayList<>());
     private final MutableLiveData<List<VerificationModel>> verificationsLiveData = new MutableLiveData<>(new ArrayList<>());
     private final List<CivicIssue> issuesList = new ArrayList<>();
+
+    public static class SubmissionResult {
+        public final boolean isMergedDuplicate;
+        public final CivicIssue targetIssue;
+
+        public SubmissionResult(boolean isMergedDuplicate, CivicIssue targetIssue) {
+            this.isMergedDuplicate = isMergedDuplicate;
+            this.targetIssue = targetIssue;
+        }
+    }
 
     private IssueRepository() {
         seedSampleData();
@@ -34,12 +47,47 @@ public class IssueRepository {
         return issuesLiveData;
     }
 
-    public void addIssue(CivicIssue issue) {
-        if (issue.getId() == null || issue.getId().isEmpty()) {
-            issue.setId("iss_" + System.currentTimeMillis());
+    /**
+     * Adds an issue with spatial deduplication checking against active issues within a 50m radius.
+     */
+    public SubmissionResult addIssueWithDeduplication(CivicIssue newIssue) {
+        if (newIssue.getId() == null || newIssue.getId().isEmpty()) {
+            newIssue.setId("iss_" + System.currentTimeMillis());
         }
-        issuesList.add(0, issue); // Add to top of feed
+
+        // Check spatial deduplication against existing issues
+        for (CivicIssue existing : issuesList) {
+            if (existing.getStatus() == IssueStatus.RESOLVED) continue;
+
+            boolean isClose = GeoUtils.isWithinRadius(
+                    newIssue.getLatitude(), newIssue.getLongitude(),
+                    existing.getLatitude(), existing.getLongitude(),
+                    DEDUPLICATION_RADIUS_METERS
+            );
+
+            boolean isSameCategory = existing.getCategory() == newIssue.getCategory();
+
+            if (isClose && isSameCategory) {
+                // Duplicate hazard detected within 50m radius! Merge into existing master ticket
+                existing.setUpvotesCount(existing.getUpvotesCount() + 1);
+                existing.setConfirmationsCount(existing.getConfirmationsCount() + 1);
+
+                newIssue.setDuplicate(true);
+                newIssue.setParentIssueId(existing.getId());
+
+                issuesLiveData.postValue(new ArrayList<>(issuesList));
+                return new SubmissionResult(true, existing);
+            }
+        }
+
+        // Unique issue report: add to top of feed
+        issuesList.add(0, newIssue);
         issuesLiveData.postValue(new ArrayList<>(issuesList));
+        return new SubmissionResult(false, newIssue);
+    }
+
+    public void addIssue(CivicIssue issue) {
+        addIssueWithDeduplication(issue);
     }
 
     public void upvoteIssue(String issueId) {
@@ -122,8 +170,8 @@ public class IssueRepository {
                 "Deep crater causing vehicle slowing and hazard for two-wheelers.",
                 IssueCategory.POTHOLE,
                 IssueSeverity.HIGH,
-                12.9716, 77.5946,
-                "45 Main St, MG Road Sector",
+                18.5308, 73.8474,
+                "FC Road, Shivajinagar, Pune",
                 "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=600",
                 "Alex Citizen",
                 "Public Works Department"
@@ -137,8 +185,8 @@ public class IssueRepository {
                 "Uncollected municipal trash spilling onto public walking track.",
                 IssueCategory.GARBAGE,
                 IssueSeverity.MEDIUM,
-                12.9750, 77.5990,
-                "Central Park Gate 2, City Center",
+                18.5074, 73.8077,
+                "Karve Road, Kothrud, Pune",
                 "https://images.unsplash.com/photo-1530587191325-3db32d826c18?w=600",
                 "Priya Sharma",
                 "Sanitation & Waste Dept"
@@ -151,8 +199,8 @@ public class IssueRepository {
                 "Clean water leaking from main pipeline onto road surface.",
                 IssueCategory.WATER_LEAK,
                 IssueSeverity.CRITICAL,
-                12.9680, 77.5910,
-                "7th Cross, Indiranagar",
+                18.5679, 73.9143,
+                "Airport Road, Viman Nagar, Pune",
                 "https://images.unsplash.com/photo-1585829365295-ab7cd400c167?w=600",
                 "Rahul Verma",
                 "Water Supply & Sewage Board"
@@ -165,8 +213,8 @@ public class IssueRepository {
                 "Dark stretch of road due to damaged LED light pole.",
                 IssueCategory.STREETLIGHT,
                 IssueSeverity.LOW,
-                12.9800, 77.6020,
-                "Old Airport Road, Ward 12",
+                18.5590, 73.7868,
+                "Baner High Street, Baner, Pune",
                 "https://images.unsplash.com/photo-1509114397022-ed747cca3f65?w=600",
                 "Anita Roy",
                 "Electrical Dept"

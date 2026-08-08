@@ -16,8 +16,7 @@
         <ImageView
             android:layout_width="96dp"
             android:layout_height="96dp"
-            android:src="@android:drawable/ic_dialog_map"
-            app:tint="@color/primary_blue" />
+            android:src="@drawable/ic_app_logo" />
 
         <TextView
             android:layout_width="wrap_content"

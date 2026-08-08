@@ -25,63 +25,71 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipAll"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="🌐 All Issues"
+                android:text="All Issues"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/primary_blue"
+                app:chipStrokeColor="@color/m3_primary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipPothole"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🕳️ Potholes"
+                android:text="Potholes"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipGarbage"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🧹 Garbage"
+                android:text="Garbage"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipWater"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💧 Water Leaks"
+                android:text="Water Leaks"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/feedChipLights"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💡 Streetlights"
+                android:text="Streetlights"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- Issue Feed RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvIssues"
+    <!-- Issue Feed SwipeRefreshLayout -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:padding="16dp" />
+        android:layout_height="match_parent">
+
+        <!-- Issue Feed RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvIssues"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:padding="16dp" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

@@ -30,7 +30,7 @@ public class SessionManager {
     }
 
     public boolean isLoggedIn() {
-        return pref.getBoolean(KEY_IS_LOGGED_IN, true); // Default logged in for smooth demo
+        return pref.getBoolean(KEY_IS_LOGGED_IN, false);
     }
 
     public String getUid() {

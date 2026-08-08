@@ -3,78 +3,101 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light"
+    android:background="@color/m3_surface"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="18dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="📍 Report Civic Hazard"
-            android:textColor="#0F172A"
-            android:textSize="22sp"
+            android:textAppearance="@style/TextAppearance.Material3.HeadlineMedium"
+            android:text="Report Civic Hazard"
+            android:textColor="@color/m3_on_surface"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
+            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
             android:text="Snap a photo or pick from gallery. Gemini AI automatically triages the issue and routes it to municipal crews."
-            android:textColor="#64748B"
-            android:textSize="13sp" />
+            android:textColor="@color/m3_on_surface_variant" />
 
-        <!-- Photo Action Buttons -->
+        <!-- 1-Tap Emergency Hazard SOS Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnEmergencySos"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="14dp"
+            android:backgroundTint="@color/severity_critical"
+            android:text="1-Tap Emergency Hazard SOS (Instant Dispatch)"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp" />
+
+        <!-- Photo & Voice Action Buttons -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:orientation="horizontal">
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCamera"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="52dp"
                 android:layout_weight="1"
-                android:text="📷 Camera"
-                android:textColor="#2563EB"
+                android:text="Camera"
+                android:textColor="@color/m3_primary"
                 android:textStyle="bold"
-                app:cornerRadius="12dp"
-                app:strokeColor="#2563EB"
-                app:strokeWidth="1.5dp" />
+                app:cornerRadius="16dp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnGallery"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                style="@style/Widget.Material3.Button.TonalButton"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_marginStart="10dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                android:text="🖼️ Gallery"
-                android:textColor="#2563EB"
+                android:text="Gallery"
+                android:textColor="@color/m3_primary"
                 android:textStyle="bold"
-                app:cornerRadius="12dp"
-                app:strokeColor="#2563EB"
-                app:strokeWidth="1.5dp" />
+                app:cornerRadius="16dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnVoiceReport"
+                style="@style/Widget.Material3.Button.TonalButton"
+                android:layout_width="0dp"
+                android:layout_height="52dp"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Voice"
+                android:textColor="@color/m3_primary"
+                android:textStyle="bold"
+                app:cornerRadius="16dp" />
 
         </LinearLayout>
 
         <!-- Photo Preview Card -->
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/cardPhotoPicker"
+            style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
-            android:layout_height="180dp"
-            android:layout_marginTop="12dp"
+            android:layout_height="190dp"
+            android:layout_marginTop="14dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="4dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="2dp"
             app:strokeWidth="1dp"
-            app:strokeColor="@color/divider_line">
+            app:strokeColor="@color/m3_outline_variant">
 
             <FrameLayout
                 android:layout_width="match_parent"
@@ -96,18 +119,18 @@
                     android:orientation="vertical">
 
                     <ImageView
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:src="@android:drawable/ic_menu_camera"
-                        app:tint="#2563EB" />
+                        app:tint="@color/m3_primary" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:text="Tap Camera or Gallery Above"
-                        android:textColor="#2563EB"
-                        android:textSize="13sp"
+                        android:textColor="@color/m3_primary"
                         android:textStyle="bold" />
                 </LinearLayout>
             </FrameLayout>
@@ -116,15 +139,16 @@
         <!-- AI Vision Triage Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnAiAnalyze"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:layout_marginTop="16dp"
-            android:backgroundTint="#2563EB"
-            android:text="✨ Run Gemini AI Vision Triage"
+            android:layout_height="54dp"
+            android:layout_marginTop="18dp"
+            android:backgroundTint="@color/m3_primary"
+            android:text="Run Gemini AI Vision Triage"
             android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:cornerRadius="12dp" />
+            app:cornerRadius="16dp" />
 
         <!-- AI Progress Bar -->
         <ProgressBar
@@ -137,14 +161,15 @@
 
         <!-- Form Input Card -->
         <com.google.android.material.card.MaterialCardView
+            style="@style/Widget.Material3.CardView.Elevated"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="18dp"
             app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="4dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="2dp"
             app:strokeWidth="1dp"
-            app:strokeColor="@color/divider_line">
+            app:strokeColor="@color/m3_outline_variant">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -157,40 +182,50 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                     android:text="Select Issue Category:"
-                    android:textColor="#0F172A"
-                    android:textSize="14sp"
+                    android:textColor="@color/m3_on_surface"
                     android:textStyle="bold" />
 
                 <Spinner
                     android:id="@+id/spinnerCategory"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="6dp"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="8dp"
                     android:background="@drawable/bg_badge_rounded"
-                    android:paddingHorizontal="12dp" />
+                    android:paddingHorizontal="14dp" />
 
                 <!-- Title Input -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:hint="Issue Headline / Title">
+                    android:layout_marginTop="16dp"
+                    android:hint="Issue Headline / Title"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textCapSentences"
-                        android:textColor="#0F172A" />
+                        android:textColor="@color/m3_on_surface" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Description Input -->
                 <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:hint="Issue Description &amp; Details">
+                    android:layout_marginTop="14dp"
+                    android:hint="Issue Description &amp; Details"
+                    app:boxCornerRadiusBottomEnd="16dp"
+                    app:boxCornerRadiusBottomStart="16dp"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etDescription"
@@ -198,43 +233,47 @@
                         android:layout_height="wrap_content"
                         android:inputType="textMultiLine"
                         android:minLines="2"
-                        android:textColor="#0F172A" />
+                        android:textColor="@color/m3_on_surface" />
                 </com.google.android.material.textfield.TextInputLayout>
 
                 <!-- Location Address Input & GPS Auto Detect -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="14dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="📍 Location Address">
+                        android:hint="📍 Location Address"
+                        app:boxCornerRadiusBottomEnd="16dp"
+                        app:boxCornerRadiusBottomStart="16dp"
+                        app:boxCornerRadiusTopEnd="16dp"
+                        app:boxCornerRadiusTopStart="16dp">
 
                         <com.google.android.material.textfield.TextInputEditText
                             android:id="@+id/etAddress"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="45 Main Street, MG Road Sector"
-                            android:textColor="#0F172A" />
+                            android:textColor="@color/m3_on_surface" />
                     </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnAutoLocation"
-                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
                         android:layout_width="wrap_content"
-                        android:layout_height="54dp"
-                        android:layout_marginStart="8dp"
+                        android:layout_height="56dp"
+                        android:layout_marginStart="10dp"
                         android:layout_marginTop="4dp"
                         android:text="📍 GPS"
-                        android:textColor="#2563EB"
+                        android:textColor="@color/m3_primary"
                         android:textStyle="bold"
-                        app:cornerRadius="10dp"
-                        app:strokeColor="#2563EB" />
+                        app:cornerRadius="14dp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -243,16 +282,17 @@
         <!-- Final Submit Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnSubmitIssue"
+            style="@style/Widget.Material3.Button"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="22dp"
             android:layout_marginBottom="24dp"
-            android:backgroundTint="#059669"
+            android:backgroundTint="@color/severity_low"
             android:text="🚀 Submit Civic Report"
             android:textColor="@color/white"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:cornerRadius="14dp" />
+            app:cornerRadius="16dp" />
 
     </LinearLayout>
 </ScrollView>

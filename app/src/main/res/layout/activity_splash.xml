@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#0F172A"
+    android:padding="24dp">
+
+    <!-- Centered Brand Logo & Title Container -->
+    <LinearLayout
+        android:id="@+id/layoutSplashContent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <!-- Glowing Brand Logo Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSplashLogo"
+            style="@style/Widget.Material3.CardView.Elevated"
+            android:layout_width="140dp"
+            android:layout_height="140dp"
+            app:cardBackgroundColor="#1E293B"
+            app:cardCornerRadius="36dp"
+            app:cardElevation="12dp"
+            app:strokeColor="#2563EB"
+            app:strokeWidth="2dp">
+
+            <ImageView
+                android:id="@+id/ivSplashLogo"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="16dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_app_logo_png" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- App Name -->
+        <TextView
+            android:id="@+id/tvSplashTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:letterSpacing="0.05"
+            android:text="CivicLens AI"
+            android:textColor="@color/white"
+            android:textSize="32sp"
+            android:textStyle="bold" />
+
+        <!-- Subtitle / Tagline -->
+        <TextView
+            android:id="@+id/tvSplashSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="AI-Powered Civic Issue Reporting"
+            android:textColor="#94A3B8"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <!-- Bottom Progress Indicator & Footer -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="32dp"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <ProgressBar
+            android:id="@+id/pbSplash"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:indeterminateTint="#38BDF8" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:letterSpacing="0.1"
+            android:text="SECURE &amp; DEDUPLICATED CIVIC INFRASTRUCTURE"
+            android:textColor="#64748B"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</RelativeLayout>

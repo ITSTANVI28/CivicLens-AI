@@ -3,6 +3,29 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
+    <!-- Material 3 Light Theme Palette Roles -->
+    <color name="m3_primary">#2563EB</color>
+    <color name="m3_on_primary">#FFFFFF</color>
+    <color name="m3_primary_container">#DBEAFE</color>
+    <color name="m3_on_primary_container">#1E3A8A</color>
+
+    <color name="m3_secondary">#0EA5E9</color>
+    <color name="m3_on_secondary">#FFFFFF</color>
+    <color name="m3_secondary_container">#E0F2FE</color>
+    <color name="m3_on_secondary_container">#0369A1</color>
+
+    <color name="m3_tertiary">#6366F1</color>
+    <color name="m3_on_tertiary">#FFFFFF</color>
+    <color name="m3_tertiary_container">#E0E7FF</color>
+    <color name="m3_on_tertiary_container">#3730A3</color>
+
+    <color name="m3_surface">#F8FAFC</color>
+    <color name="m3_on_surface">#0F172A</color>
+    <color name="m3_surface_variant">#F1F5F9</color>
+    <color name="m3_on_surface_variant">#475569</color>
+    <color name="m3_outline">#CBD5E1</color>
+    <color name="m3_outline_variant">#E2E8F0</color>
+
     <!-- Professional Civic Navy & Royal Blue Brand Palette -->
     <color name="primary_brand">#1E293B</color>       <!-- Slate Navy 800 -->
     <color name="primary_blue">#2563EB</color>        <!-- Royal Blue 600 -->
@@ -29,5 +52,5 @@
     <color name="surface_card">#FFFFFF</color>         <!-- Pure White -->
     <color name="text_primary">#0F172A</color>         <!-- Slate Dark 900 -->
     <color name="text_secondary">#64748B</color>       <!-- Slate Muted 500 -->
-    <color name="divider_line">#E2E8F0</color>         <!-- Slate Border 200 -->
+    <color name="divider_line">#CBD5E1</color>         <!-- Slate Border 300 -->
 </resources>

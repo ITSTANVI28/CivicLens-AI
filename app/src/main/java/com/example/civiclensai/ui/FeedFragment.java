@@ -41,6 +41,12 @@ public class FeedFragment extends Fragment implements IssueAdapter.OnIssueClickL
         binding.rvIssues.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvIssues.setAdapter(adapter);
 
+        binding.swipeRefreshLayout.setColorSchemeResources(R.color.m3_primary, R.color.m3_secondary);
+        binding.swipeRefreshLayout.setOnRefreshListener(() -> {
+            applyFilter();
+            binding.swipeRefreshLayout.setRefreshing(false);
+        });
+
         // Filter chips setup
         binding.feedChipGroup.setOnCheckedStateChangeListener((group, checkedIds) -> {
             if (checkedIds.isEmpty() || checkedIds.contains(R.id.feedChipAll)) {

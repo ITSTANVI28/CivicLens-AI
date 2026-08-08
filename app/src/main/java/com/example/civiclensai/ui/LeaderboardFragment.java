@@ -8,10 +8,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.civiclensai.databinding.FragmentLeaderboardBinding;
+import com.example.civiclensai.utils.SessionManager;
 
 public class LeaderboardFragment extends Fragment {
 
     private FragmentLeaderboardBinding binding;
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -23,7 +25,19 @@ public class LeaderboardFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        binding.tvUserScore.setText("420 PTS");
+        sessionManager = new SessionManager(requireContext());
+        updateLeaderboardStats();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateLeaderboardStats();
+    }
+
+    private void updateLeaderboardStats() {
+        if (binding == null || sessionManager == null) return;
+        binding.tvUserScore.setText(sessionManager.getKarmaPoints() + " PTS");
     }
 
     @Override

@@ -1,0 +1,42 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+    <!-- Rounded Shield Background -->
+    <path android:pathData="M24,4 C34,4 42,8 42,18 C42,32 24,44 24,44 C24,44 6,32 6,18 C6,8 14,4 24,4 Z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:startX="6"
+                android:startY="4"
+                android:endX="42"
+                android:endY="44"
+                android:type="linear">
+                <item android:color="#1E3A8A" android:offset="0.0" />
+                <item android:color="#2563EB" android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+
+    <!-- Dome Roof -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M24,12 C20,12 17.5,14.5 17,17 L31,17 C30.5,14.5 28,12 24,12 Z" />
+    <!-- Header Beam -->
+    <path
+        android:fillColor="#93C5FD"
+        android:pathData="M15,18 H33 V20 H15 Z" />
+    <!-- 4 Pillars -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M17,21 H19 V29 H17 Z M21,21 H23 V29 H21 Z M25,21 H27 V29 H25 Z M29,21 H31 V29 H29 Z" />
+    <!-- Base -->
+    <path
+        android:fillColor="#93C5FD"
+        android:pathData="M14,30 H34 V32 H14 Z" />
+    <!-- AI Sparkle Badge -->
+    <path
+        android:fillColor="#60A5FA"
+        android:pathData="M34,10 L35,13 L38,14 L35,15 L34,18 L33,15 L30,14 L33,13 Z" />
+</vector>

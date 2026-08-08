@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light"
+    android:background="@color/m3_surface"
     android:fillViewport="true">
 
     <LinearLayout
@@ -14,7 +14,7 @@
         <!-- Image Banner -->
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="250dp">
+            android:layout_height="260dp">
 
             <ImageView
                 android:id="@+id/ivDetailPhoto"
@@ -35,9 +35,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_badge_rounded"
-                    android:paddingHorizontal="12dp"
+                    android:paddingHorizontal="14dp"
                     android:paddingVertical="6dp"
-                    android:text="🕳️ POTHOLE"
+                    android:text="POTHOLE"
                     android:textColor="@color/white"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:background="@drawable/bg_badge_rounded"
-                    android:paddingHorizontal="12dp"
+                    android:paddingHorizontal="14dp"
                     android:paddingVertical="6dp"
                     android:text="HIGH SEVERITY"
                     android:textColor="@color/white"
@@ -61,7 +61,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/bg_light"
+            android:background="@color/m3_surface"
             android:orientation="vertical"
             android:padding="20dp">
 
@@ -69,9 +69,9 @@
                 android:id="@+id/tvDetailTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.Material3.HeadlineSmall"
                 android:text="Large Asphalt Pothole near Main Junction"
-                android:textColor="#0F172A"
-                android:textSize="20sp"
+                android:textColor="@color/m3_on_surface"
                 android:textStyle="bold" />
 
             <TextView
@@ -79,21 +79,23 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
-                android:text="📍 45 Main St, MG Road Sector"
-                android:textColor="#2563EB"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                android:text="45 Main St, MG Road Sector"
+                android:textColor="@color/m3_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <!-- SLA Target Resolution Box -->
             <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Elevated"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="14dp"
+                app:cardCornerRadius="16dp"
                 app:cardElevation="2dp"
                 app:strokeWidth="1dp"
-                app:strokeColor="@color/divider_line">
+                app:strokeColor="@color/m3_outline_variant">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -101,13 +103,14 @@
                     android:background="@color/white"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="14dp">
+                    android:padding="16dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="⏱️ Target SLA Resolution:"
-                        android:textColor="#0F172A"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
+                        android:text="Target SLA Resolution:"
+                        android:textColor="@color/m3_on_surface"
                         android:textStyle="bold" />
 
                     <TextView
@@ -115,8 +118,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                         android:text="72 Hours SLA"
-                        android:textColor="#EA580C"
+                        android:textColor="@color/severity_high"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -125,9 +129,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:text="Hazard Description &amp; Details"
-                android:textColor="#0F172A"
-                android:textSize="15sp"
+                android:textColor="@color/m3_on_surface"
                 android:textStyle="bold" />
 
             <TextView
@@ -135,9 +139,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="6dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
                 android:lineSpacingExtra="3dp"
                 android:text="Deep crater causing vehicle slowing and hazard for two-wheelers."
-                android:textColor="#475569"
+                android:textColor="@color/m3_on_surface_variant"
                 android:textSize="14sp" />
 
             <TextView
@@ -145,10 +150,111 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
+                android:textAppearance="@style/TextAppearance.Material3.BodySmall"
                 android:text="Assigned Department: Public Works Department"
-                android:textColor="#64748B"
-                android:textSize="13sp"
+                android:textColor="@color/m3_on_surface_variant"
                 android:textStyle="italic" />
+
+            <!-- Proof-of-Fix Before / After Visual Card -->
+            <com.google.android.material.card.MaterialCardView
+                style="@style/Widget.Material3.CardView.Elevated"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="2dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/m3_outline_variant">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="@style/TextAppearance.Material3.TitleSmall"
+                        android:text="Proof-of-Fix Resolution Verification"
+                        android:textColor="@color/m3_on_surface"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textAppearance="@style/TextAppearance.Material3.BodySmall"
+                        android:text="Compare Reported Hazard vs Municipal Crew Fixed Result"
+                        android:textColor="@color/m3_on_surface_variant" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="140dp"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/ivBeforePhoto"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@android:drawable/ic_menu_gallery" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|start"
+                                android:layout_margin="8dp"
+                                android:background="#CCDC2626"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"
+                                android:text="BEFORE"
+                                android:textColor="@color/white"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </FrameLayout>
+
+                        <View
+                            android:layout_width="4dp"
+                            android:layout_height="match_parent"
+                            android:background="@color/white" />
+
+                        <FrameLayout
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1">
+
+                            <ImageView
+                                android:id="@+id/ivAfterPhoto"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:scaleType="centerCrop"
+                                android:src="@android:drawable/ic_menu_gallery" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|start"
+                                android:layout_margin="8dp"
+                                android:background="#CC059669"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="4dp"
+                                android:text="AFTER FIXED"
+                                android:textColor="@color/white"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </FrameLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Upvote & Verify Action Bar -->
             <LinearLayout
@@ -159,31 +265,45 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnDetailUpvote"
+                    style="@style/Widget.Material3.Button"
                     android:layout_width="0dp"
-                    android:layout_height="52dp"
+                    android:layout_height="54dp"
                     android:layout_weight="1"
-                    android:backgroundTint="#2563EB"
-                    android:text="👍 Upvote (24)"
+                    android:backgroundTint="@color/m3_primary"
+                    android:text="Upvote (24)"
                     android:textColor="@color/white"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:cornerRadius="12dp" />
+                    app:cornerRadius="16dp" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnVerifyStatus"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    style="@style/Widget.Material3.Button.TonalButton"
                     android:layout_width="0dp"
-                    android:layout_height="52dp"
+                    android:layout_height="54dp"
                     android:layout_marginStart="12dp"
                     android:layout_weight="1"
-                    android:text="✅ Confirm / Verify"
-                    android:textColor="#2563EB"
+                    android:text="Confirm / Verify"
+                    android:textColor="@color/m3_primary"
                     android:textSize="14sp"
                     android:textStyle="bold"
-                    app:cornerRadius="12dp"
-                    app:strokeColor="#2563EB"
-                    app:strokeWidth="1.5dp" />
+                    app:cornerRadius="16dp" />
             </LinearLayout>
+
+            <!-- PDF Ticket Download Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnDownloadPdf"
+                style="@style/Widget.Material3.Button.OutlinedButton"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="14dp"
+                android:text="Download Official PDF Ticket"
+                android:textColor="@color/m3_primary"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                app:cornerRadius="16dp"
+                app:strokeColor="@color/m3_primary"
+                app:strokeWidth="1.5dp" />
 
         </LinearLayout>
     </LinearLayout>

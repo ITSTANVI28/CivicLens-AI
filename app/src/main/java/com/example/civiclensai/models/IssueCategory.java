@@ -1,12 +1,12 @@
 package com.example.civiclensai.models;
 
 public enum IssueCategory {
-    POTHOLE("Pothole & Road Hazard", "🕳️", "Public Works Dept"),
-    GARBAGE("Garbage & Waste", "🧹", "Sanitation Dept"),
-    WATER_LEAK("Water Leak & Drainage", "💧", "Water Supply Board"),
-    STREETLIGHT("Broken Streetlight", "💡", "Electrical Department"),
-    MANHOLE("Open Manhole Hazard", "⚠️", "Infrastructure Dept"),
-    OTHER("General Civic Issue", "🏛️", "Municipal Administration");
+    POTHOLE("Pothole & Road Hazard", "", "Public Works Dept"),
+    GARBAGE("Garbage & Waste", "", "Sanitation Dept"),
+    WATER_LEAK("Water Leak & Drainage", "", "Water Supply Board"),
+    STREETLIGHT("Broken Streetlight", "", "Electrical Department"),
+    MANHOLE("Open Manhole Hazard", "", "Infrastructure Dept"),
+    OTHER("General Civic Issue", "", "Municipal Administration");
 
     private final String displayName;
     private final String emoji;

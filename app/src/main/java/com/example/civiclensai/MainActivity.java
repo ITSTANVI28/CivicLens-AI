@@ -8,6 +8,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.example.civiclensai.databinding.ActivityMainBinding;
 import com.example.civiclensai.ui.FeedFragment;
@@ -25,9 +28,23 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Initialize osmdroid tile configuration before super.onCreate
+        org.osmdroid.config.Configuration.getInstance().load(
+                getApplicationContext(),
+                android.preference.PreferenceManager.getDefaultSharedPreferences(getApplicationContext())
+        );
+        org.osmdroid.config.Configuration.getInstance().setUserAgentValue("CivicLensAI_SmartTriage_App/1.0 (Android; contact@civiclens.ai)");
+
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        // Apply status bar window inset padding so toolbar is never cut off by camera notch
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main, (v, insets) -> {
+            Insets statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars());
+            v.setPadding(0, statusBarInsets.top, 0, 0);
+            return insets;
+        });
 
         sessionManager = new SessionManager(this);
 
@@ -68,12 +85,17 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
+                int targetId;
                 switch (position) {
-                    case 0: binding.bottomNavigation.setSelectedItemId(R.id.nav_map); break;
-                    case 1: binding.bottomNavigation.setSelectedItemId(R.id.nav_feed); break;
-                    case 2: binding.bottomNavigation.setSelectedItemId(R.id.nav_report); break;
-                    case 3: binding.bottomNavigation.setSelectedItemId(R.id.nav_my_reports); break;
-                    case 4: binding.bottomNavigation.setSelectedItemId(R.id.nav_profile); break;
+                    case 0: targetId = R.id.nav_map; break;
+                    case 1: targetId = R.id.nav_feed; break;
+                    case 2: targetId = R.id.nav_report; break;
+                    case 3: targetId = R.id.nav_my_reports; break;
+                    case 4: targetId = R.id.nav_profile; break;
+                    default: targetId = R.id.nav_map; break;
+                }
+                if (binding.bottomNavigation.getSelectedItemId() != targetId) {
+                    binding.bottomNavigation.setSelectedItemId(targetId);
                 }
             }
         });

@@ -1,5 +1,6 @@
 package com.example.civiclensai.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.example.civiclensai.utils.NotificationHelper;
 import com.example.civiclensai.utils.SessionManager;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class ReportFragment extends Fragment {
 
@@ -50,6 +52,23 @@ public class ReportFragment extends Fragment {
             }
     );
 
+    private final ActivityResultLauncher<Intent> speechLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
+                    java.util.ArrayList<String> matches = result.getData().getStringArrayListExtra(android.speech.RecognizerIntent.EXTRA_RESULTS);
+                    if (matches != null && !matches.isEmpty()) {
+                        String spokenText = matches.get(0);
+                        binding.etDescription.setText(spokenText);
+                        if (binding.etTitle.getText() == null || binding.etTitle.getText().toString().isEmpty()) {
+                            binding.etTitle.setText("Voice Report: " + (spokenText.length() > 28 ? spokenText.substring(0, 28) + "..." : spokenText));
+                        }
+                        Toast.makeText(requireContext(), "🎙️ Voice Dictation Captured!", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+    );
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -64,8 +83,10 @@ public class ReportFragment extends Fragment {
 
         setupCategorySpinner();
 
+        binding.btnEmergencySos.setOnClickListener(v -> trigger1TapEmergencySos());
         binding.btnCamera.setOnClickListener(v -> createMockPhotoCaptured("Camera"));
         binding.btnGallery.setOnClickListener(v -> galleryLauncher.launch("image/*"));
+        binding.btnVoiceReport.setOnClickListener(v -> com.example.civiclensai.utils.VoiceTriageHelper.launchVoiceDictation(speechLauncher, requireContext()));
         binding.cardPhotoPicker.setOnClickListener(v -> createMockPhotoCaptured("Camera"));
 
         binding.btnAutoLocation.setOnClickListener(v -> autoDetectGpsLocation());
@@ -81,9 +102,42 @@ public class ReportFragment extends Fragment {
     }
 
     private void setupCategorySpinner() {
-        String[] categories = {"🕳️ Pothole & Road Hazard", "🧹 Garbage & Waste", "💧 Water Leak & Drainage", "💡 Broken Streetlight", "⚠️ Open Manhole Hazard", "🏛️ General Civic Issue"};
+        String[] categories = {"Pothole & Road Hazard", "Garbage & Waste", "Water Leak & Drainage", "Broken Streetlight", "Open Manhole Hazard", "General Civic Issue"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_spinner_dropdown_item, categories);
         binding.spinnerCategory.setAdapter(adapter);
+    }
+
+    private void trigger1TapEmergencySos() {
+        if (capturedBitmap == null) {
+            createMockPhotoCaptured("Camera");
+        }
+
+        String userAddr = binding.etAddress.getText() != null && !binding.etAddress.getText().toString().trim().isEmpty() ?
+                binding.etAddress.getText().toString().trim() : "FC Road, Shivajinagar, Pune";
+        double[] coords = com.example.civiclensai.utils.GeoLocationResolver.resolveCoordinates(requireContext(), userAddr);
+
+        String sosTitle = "CRITICAL HAZARD SOS: Open Manhole / Cable Line";
+        String sosDesc = "Emergency 1-Tap SOS triggered by citizen on-site. Immediate municipal dispatch and safety barrier placement required.";
+        String sosAddress = userAddr.contains("Pune") ? userAddr : userAddr + ", Pune";
+
+        CivicIssue sosIssue = new CivicIssue(
+                "sos_" + System.currentTimeMillis(),
+                sosTitle,
+                sosDesc,
+                IssueCategory.MANHOLE,
+                IssueSeverity.CRITICAL,
+                coords[0],
+                coords[1],
+                sosAddress,
+                "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=600",
+                sessionManager.getUserName(),
+                "Disaster Management & Safety Dept"
+        );
+
+        IssueRepository.getInstance().addIssueWithDeduplication(sosIssue);
+        sessionManager.addKarmaPoints(100);
+        NotificationHelper.showStatusChangedNotification(requireContext(), sosTitle, "CRITICAL DISPATCH");
+        Toast.makeText(requireContext(), "1-Tap Emergency SOS Dispatched to Pune Sector! Priority 24h SLA Activated (+100 Karma)", Toast.LENGTH_LONG).show();
     }
 
     private void createMockPhotoCaptured(String source) {
@@ -91,15 +145,13 @@ public class ReportFragment extends Fragment {
         capturedBitmap.eraseColor(Color.LTGRAY);
         binding.ivPreview.setImageBitmap(capturedBitmap);
         binding.layoutPhotoPlaceholder.setVisibility(View.GONE);
-        Toast.makeText(requireContext(), "📷 Photo captured from " + source + "! Ready for AI triage.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(requireContext(), "Photo captured from " + source + "! Ready for AI triage.", Toast.LENGTH_SHORT).show();
     }
 
     private void autoDetectGpsLocation() {
-        // Simulates FusedLocationProviderClient GPS Auto Detect
-        double lat = 12.9716 + (Math.random() - 0.5) * 0.02;
-        double lng = 77.5946 + (Math.random() - 0.5) * 0.02;
-        binding.etAddress.setText("📍 GPS Auto-Detected: " + String.format("%.4f, %.4f", lat, lng) + " (MG Road Sector)");
-        Toast.makeText(requireContext(), "📍 GPS Location Auto-Detected!", Toast.LENGTH_SHORT).show();
+        double[] coords = com.example.civiclensai.utils.GeoLocationResolver.resolveCoordinates(requireContext(), "FC Road, Shivajinagar, Pune");
+        binding.etAddress.setText("FC Road, Shivajinagar, Pune (" + String.format(Locale.ROOT, "%.4f, %.4f", coords[0], coords[1]) + ")");
+        Toast.makeText(requireContext(), "GPS Location Resolved: Pune Sector!", Toast.LENGTH_SHORT).show();
     }
 
     private void runAiTriage() {
@@ -118,7 +170,7 @@ public class ReportFragment extends Fragment {
                 binding.etDescription.setText(result.description);
                 binding.spinnerCategory.setSelection(result.category.ordinal());
 
-                Toast.makeText(requireContext(), "✨ Gemini AI Vision Triage Complete!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), "Gemini AI Vision Triage Complete!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -134,12 +186,15 @@ public class ReportFragment extends Fragment {
     private void submitIssueReport() {
         String title = binding.etTitle.getText() != null ? binding.etTitle.getText().toString().trim() : "";
         String desc = binding.etDescription.getText() != null ? binding.etDescription.getText().toString().trim() : "";
-        String address = binding.etAddress.getText() != null ? binding.etAddress.getText().toString().trim() : "MG Road Sector";
+        String address = binding.etAddress.getText() != null && !binding.etAddress.getText().toString().trim().isEmpty() ?
+                binding.etAddress.getText().toString().trim() : "FC Road, Shivajinagar, Pune";
 
         if (title.isEmpty()) {
             Toast.makeText(requireContext(), "Please enter an issue title or run AI triage.", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        double[] resolvedCoords = com.example.civiclensai.utils.GeoLocationResolver.resolveCoordinates(requireContext(), address);
 
         IssueCategory category = IssueCategory.values()[Math.min(binding.spinnerCategory.getSelectedItemPosition(), IssueCategory.values().length - 1)];
         IssueSeverity severity = currentTriageResult != null ? currentTriageResult.severity : IssueSeverity.HIGH;
@@ -151,20 +206,32 @@ public class ReportFragment extends Fragment {
                 desc,
                 category,
                 severity,
-                12.9716 + (Math.random() - 0.5) * 0.02,
-                77.5946 + (Math.random() - 0.5) * 0.02,
+                resolvedCoords[0],
+                resolvedCoords[1],
                 address,
                 "https://images.unsplash.com/photo-1515162816999-a0c47dc192f7?w=600",
                 sessionManager.getUserName(),
                 dept
         );
 
-        IssueRepository.getInstance().addIssue(newIssue);
+        // Anonymize faces/license plates before upload
+        if (capturedBitmap != null) {
+            capturedBitmap = com.example.civiclensai.utils.PrivacyBlurEngine.anonymizeImage(capturedBitmap);
+        }
+
+        IssueRepository.SubmissionResult result = IssueRepository.getInstance().addIssueWithDeduplication(newIssue);
         sessionManager.addKarmaPoints(50);
 
-        // Show System Notification
-        NotificationHelper.showReportSubmittedNotification(requireContext(), title);
-        Toast.makeText(requireContext(), "🎉 Report Submitted Successfully! (+50 Karma Points)", Toast.LENGTH_LONG).show();
+        // Check proximity alert for critical hazards
+        com.example.civiclensai.utils.ProximityAlertHelper.checkAndNotifyProximityAlert(requireContext(), newIssue, 12.9716, 77.5946);
+
+        if (result.isMergedDuplicate) {
+            NotificationHelper.showReportSubmittedNotification(requireContext(), "Duplicate Hazard Merged: " + result.targetIssue.getTitle());
+            Toast.makeText(requireContext(), "Similar hazard detected within 50m! Upvote added to ticket #" + result.targetIssue.getId() + " (+50 Karma)", Toast.LENGTH_LONG).show();
+        } else {
+            NotificationHelper.showReportSubmittedNotification(requireContext(), title);
+            Toast.makeText(requireContext(), "New Master Report Submitted! (+50 Karma Points)", Toast.LENGTH_LONG).show();
+        }
 
         // Reset Form
         binding.etTitle.setText("");

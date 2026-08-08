@@ -19,6 +19,7 @@ public class CivicIssue implements Serializable {
     private int confirmationsCount;
     private long timestamp;
     private boolean isDuplicate;
+    private String parentIssueId;
 
     public CivicIssue() {
         // Default constructor for Firestore / Serialization
@@ -96,4 +97,28 @@ public class CivicIssue implements Serializable {
 
     public boolean isDuplicate() { return isDuplicate; }
     public void setDuplicate(boolean duplicate) { isDuplicate = duplicate; }
+
+    public String getParentIssueId() { return parentIssueId; }
+    public void setParentIssueId(String parentIssueId) { this.parentIssueId = parentIssueId; }
+
+    public long getSlaDeadline() {
+        long duration = 14 * 24 * 3600 * 1000L;
+        if (severity == IssueSeverity.CRITICAL) {
+            duration = 24 * 3600 * 1000L;
+        } else if (severity == IssueSeverity.HIGH) {
+            duration = 72 * 3600 * 1000L;
+        } else if (severity == IssueSeverity.MEDIUM) {
+            duration = 7 * 24 * 3600 * 1000L;
+        }
+        return timestamp + duration;
+    }
+
+    public String getFormattedSlaRemaining() {
+        long remaining = getSlaDeadline() - System.currentTimeMillis();
+        if (remaining <= 0) return "🚨 SLA Breached";
+        long hours = remaining / (3600 * 1000L);
+        long minutes = (remaining % (3600 * 1000L)) / (60 * 1000L);
+        return hours + "h " + minutes + "m remaining";
+    }
 }
+

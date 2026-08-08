@@ -13,10 +13,16 @@
         android:orientation="vertical"
         android:padding="24dp">
 
+        <ImageView
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/ic_app_logo" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Join CivicLens AI 👤"
+            android:text="Join CivicLens AI"
             android:textColor="@color/primary_blue"
             android:textSize="26sp"
             android:textStyle="bold" />

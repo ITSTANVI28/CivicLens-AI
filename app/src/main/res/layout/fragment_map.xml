@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_light">
+    android:background="@color/m3_surface">
 
-    <!-- Google Map Container -->
-    <com.google.android.gms.maps.MapView
+    <!-- OpenStreetMap Container -->
+    <org.osmdroid.views.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:padding="8dp"
+        android:padding="12dp"
         android:scrollbars="none">
 
         <com.google.android.material.chip.ChipGroup
@@ -27,77 +27,78 @@
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipAll"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:text="🌐 All Issues"
+                android:text="All Issues"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/primary_blue"
+                app:chipStrokeColor="@color/m3_primary"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipPotholes"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🕳️ Potholes"
+                android:text="Potholes"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipGarbage"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="🧹 Garbage"
+                android:text="Garbage"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipWater"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💧 Water Leaks"
+                android:text="Water Leaks"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
 
             <com.google.android.material.chip.Chip
                 android:id="@+id/chipLights"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="💡 Streetlights"
+                android:text="Streetlights"
                 app:chipBackgroundColor="@color/white"
-                app:chipStrokeColor="@color/divider_line"
+                app:chipStrokeColor="@color/m3_outline_variant"
                 app:chipStrokeWidth="1dp" />
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
-    <!-- Bottom Sheet Details preview when marker selected -->
+    <!-- Material 3 Surface Sheet Details preview when marker selected -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomSheetCard"
+        style="@style/Widget.Material3.CardView.Elevated"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:layout_margin="16dp"
         android:visibility="gone"
         app:cardBackgroundColor="@color/white"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="12dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/divider_line">
+        app:cardCornerRadius="28dp"
+        app:cardElevation="10dp"
+        app:strokeColor="@color/m3_outline_variant"
+        app:strokeWidth="1dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:padding="20dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -110,9 +111,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_badge_rounded"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="5dp"
-                    android:text="🕳️ POTHOLE"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="6dp"
+                    android:text="POTHOLE"
                     android:textColor="@color/white"
                     android:textSize="11sp"
                     android:textStyle="bold" />
@@ -123,8 +124,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/bg_badge_rounded"
-                    android:paddingHorizontal="12dp"
-                    android:paddingVertical="5dp"
+                    android:paddingHorizontal="14dp"
+                    android:paddingVertical="6dp"
                     android:text="HIGH SEVERITY"
                     android:textColor="@color/white"
                     android:textSize="11sp"
@@ -135,9 +136,10 @@
                 android:id="@+id/sheetTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
+                android:textAppearance="@style/TextAppearance.Material3.TitleMedium"
                 android:text="Issue Title Placeholder"
-                android:textColor="#0F172A"
+                android:textColor="@color/m3_on_surface"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -146,22 +148,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
+                android:textAppearance="@style/TextAppearance.Material3.LabelLarge"
                 android:text="📍 45 Main Street, Sector 4"
-                android:textColor="#2563EB"
+                android:textColor="@color/m3_primary"
                 android:textSize="13sp"
                 android:textStyle="bold" />
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnViewDetails"
+                style="@style/Widget.Material3.Button"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="14dp"
-                android:backgroundTint="#2563EB"
+                android:layout_height="52dp"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="@color/m3_primary"
                 android:text="View Full Issue Details &amp; Verify"
                 android:textColor="@color/white"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:cornerRadius="12dp" />
+                app:cornerRadius="16dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 

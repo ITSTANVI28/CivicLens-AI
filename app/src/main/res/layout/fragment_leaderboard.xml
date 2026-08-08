@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🏆 Community Civic Karma"
+            android:text="Community Civic Karma"
             android:textColor="#0F172A"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -73,7 +73,7 @@
                         android:background="#33FFFFFF"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="4dp"
-                        android:text="🏅 CIVIC GUARDIAN"
+                        android:text="CIVIC GUARDIAN"
                         android:textColor="@color/white"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -97,7 +97,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="🌟 Top Community Champions"
+            android:text="Top Community Champions"
             android:textColor="#0F172A"
             android:textSize="17sp"
             android:textStyle="bold" />
@@ -130,8 +130,10 @@
                         android:layout_height="36dp"
                         android:background="@drawable/bg_badge_rounded"
                         android:gravity="center"
-                        android:text="🥇"
-                        android:textSize="18sp" />
+                        android:text="1"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -183,8 +185,10 @@
                         android:layout_height="36dp"
                         android:background="@drawable/bg_badge_rounded"
                         android:gravity="center"
-                        android:text="🥈"
-                        android:textSize="18sp" />
+                        android:text="2"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -236,8 +240,10 @@
                         android:layout_height="36dp"
                         android:background="@drawable/bg_badge_rounded"
                         android:gravity="center"
-                        android:text="🥉"
-                        android:textSize="18sp" />
+                        android:text="3"
+                        android:textColor="@color/white"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
 
                     <LinearLayout
                         android:layout_width="0dp"
