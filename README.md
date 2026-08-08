@@ -1,188 +1,137 @@
-# 🏛️ CivicLens AI - Smart Civic Issue Reporting & Resolution Platform
+# 🏛️ CivicLens AI — Smart Civic Issue Reporting & Resolution Platform
 
-> **CivicLens AI** is an AI-powered, community-driven civic engagement platform that empowers citizens to report urban issues (potholes, garbage dumps, water leaks, damaged streetlights) using computer vision, real-time spatial mapping, and automated authority dispatching.
-
----
-
-## 🔍 Executive Summary & Strategic Review
-
-### ✅ Strengths of Your Original Concept
-1. **Clear Value Proposition**: Solves the real-world friction of reporting civic problems with instant photo uploads instead of tedious manual forms.
-2. **Impactful AI Integration**: Utilizing multimodal AI (Gemini Vision) for automatic issue taxonomy, severity scoring, department tagging, and duplicate identification.
-3. **Crowdsourced Verification**: Reduces municipal workload by letting local citizens verify whether an issue is genuine, active, or fixed.
-4. **Real-time Map & Heatmap**: Visualizes city infrastructure health dynamically for both citizens and local authorities.
+> **CivicLens AI** is an AI-powered, community-driven civic engagement platform that empowers citizens to report urban infrastructure hazards (potholes, garbage dumps, water leaks, damaged streetlights, open manholes) using computer vision, real-time spatial mapping, automated municipal dispatching, and crowdsourced verification.
 
 ---
 
-## 🛠️ Critical Considerations & Pitfalls to Address
+## 🌟 Key Features & Capabilities
 
-| Area | Challenge / Risk | Recommended Solution |
+### 1. 🚀 Material 3 Animated Splash Screen (`SplashActivity`)
+- Official Android 12+ `androidx.core:core-splashscreen` API integration.
+- Sleek dark slate (`#0F172A`) launch theme with 3D metallic brand logo entrance animation, tagline, and instant session routing (`MainActivity` vs `LoginActivity`).
+
+### 2. 🤖 Gemini AI Vision Triage Engine (`GeminiTriageService`)
+- Multimodal computer vision analysis using Google Gemini 1.5 Flash.
+- Automatically analyzes hazard photos to extract:
+  - Concise Hazard Title & Summary
+  - Issue Category Taxonomy (`POTHOLE`, `GARBAGE`, `WATER_LEAK`, `STREETLIGHT`, `MANHOLE`)
+  - Structural Hazard Severity (`CRITICAL`, `HIGH`, `MEDIUM`, `LOW`)
+  - Target Municipal Department Tagging (`Public Works Dept`, `Water Board`, etc.)
+
+### 3. ⚡ 1-Tap Emergency Hazard SOS Mode
+- Single-button emergency dispatch for critical life-threatening hazards (e.g., open manholes, fallen live power lines).
+- Instantly captures GPS location and dispatches a **24-Hour Priority SLA Ticket** to Disaster Management (+100 Karma Points).
+
+### 4. 📄 Storage Access Framework (SAF) PDF Ticket Generator (`PdfReportGenerator`)
+- Prompts citizens with Android's system file picker (`Intent.ACTION_CREATE_DOCUMENT`) allowing custom folder selection (`Downloads`, `Documents`, `Google Drive`).
+- Renders an **Official Municipal Work Order PDF**:
+  - Slate Navy Header & Work Order Badge
+  - Severity Level Color Pill & SLA Resolution Window
+  - 2-Column Incident Metadata Table Grid
+  - 50m Spatial Deduplication Verification Seal
+  - Gemini AI Triage Blockquote
+  - Green **COMMUNITY AUDIT SEAL** (SHA256 Security Hash)
+  - Authorized Municipal Engineer Signature Line
+
+### 5. ↔️ Proof-of-Fix Before/After Visual Comparison
+- Interactive side-by-side visual comparison card on `IssueDetailActivity`.
+- Displays the original citizen reported photo (**BEFORE** red badge) against the municipal crew's resolved result (**AFTER FIXED** green badge) loaded via Glide.
+
+### 6. 📍 Smart Geocoder & Pune Sector Resolver (`GeoLocationResolver`)
+- Converts typed address text (e.g. `FC Road, Pune`, `Kothrud`, `Viman Nagar`, `Baner`, `Pimpri-Chinchwad`) to exact GPS coordinates using `android.location.Geocoder`.
+- Features an offline Pune sector fallback mapper and centers the live map directly on **Pune City Center (`18.5204, 73.8567`)**.
+
+### 7. 🌐 Offline Room Database Engine (`AppDatabase`)
+- Offline-first caching architecture using `androidx.room:room-runtime:2.6.1`.
+- Submissions created without active cellular network are queued locally in `civic_issues` table and auto-synced upon reconnecting.
+
+### 8. 🛡️ 50m Spatial Deduplication & Privacy Guard
+- **50m Haversine Radius**: Checks active issues within 50 meters. If duplicate, merges submissions into a single master ticket and awards +50 upvotes/karma to reporter.
+- **Privacy Blur Engine**: Automatically anonymizes faces and license plates prior to public map display.
+
+---
+
+## 📦 Production Android UI Libraries & Dependencies
+
+| Library | Version | Usage / Purpose |
 | :--- | :--- | :--- |
-| **Privacy & PII** | Photos may accidentally capture faces, private homes, or vehicle license plates. | **AI Privacy Guard**: Run Gemini/Vision model to blur faces and license plates automatically before public map rendering. |
-| **Spam / Fake Reports** | Malicious users uploading internet images or fake locations. | **Geofence & Metadata Validation**: Verify device GPS against photo EXIF metadata and enforce a maximum reporting radius. |
-| **Network Connectivity** | Citizens often spot issues in areas with poor cellular connectivity. | **Offline-First Architecture**: Store drafts locally using Android `WorkManager` & Room/Firestore offline persistence, auto-syncing when online. |
-| **Duplicate Flooding** | Multiple citizens reporting the same major pothole or pipe burst. | **Spatial-Visual Deduplication**: Query Firestore within a 50m radius and use Gemini image similarity to group reports into a single master ticket. |
-| **Authority Handshake** | Reports might sit unresolved without clear accountability. | **SLA Tracking & Lifecycle Pipeline**: Define transparent status stages (`Reported` ➔ `Triaged` ➔ `Assigned` ➔ `In Progress` ➔ `Resolved` ➔ `Community Verified`). |
+| **Material Components** | `1.14.0` | Google Material 3 Design System, Buttons, Cards, Chips |
+| **Airbnb Lottie** | `6.4.0` | Smooth Vector Lottie Animations for Splash & Loading |
+| **Meta Shimmer** | `0.5.0` | Skeleton Shimmer Loaders for Feed & Cards |
+| **CircleImageView** | `3.1.0` | Circular Avatar Rendering for Profiles |
+| **SwipeRefreshLayout**| `1.1.0` | Pull-to-Refresh Gesture for Feed & Issue Lists |
+| **Room Database** | `2.6.1` | Local SQLite ORM Engine for Offline Persistence |
+| **Core SplashScreen** | `1.0.1` | Android 12+ Official Splash Screen API |
+| **Glide** | `4.16.0` | High-Performance Image Caching & Rendering |
+| **osmdroid** | `6.1.18` | OpenStreetMap CartoDB Voyager Custom Tiles |
 
 ---
 
-## 🚀 Enhanced Feature Roadmap
-
-```mermaid
-graph TD
-    A[Citizen Takes Photo] --> B[Gemini AI Engine]
-    B --> C[Issue Classification & Severity]
-    B --> D[Auto PII Blur & Summary]
-    B --> E[Spatial Deduplication Check]
-    C & D & E --> F[Cloud Firestore & Maps SDK]
-    F --> G[Live Community Map & Heatmap]
-    F --> H[Municipal Authority Portal]
-    G --> I[Community Upvotes & Verification]
-    H --> J[Status Update: Fixed]
-    J --> K[Re-Verification Request to Nearby Users]
-```
-
-### 1. 📷 Smart AI Capture & Processing
-* **Automated Issue Classification**: Instant multi-label detection (Pothole, Open Manhole, Overflowing Garbage Bin, Water Leakage, Fallen Tree, Broken Streetlight, Damaged Signage).
-* **Severity & Hazard Rating**: Gemini evaluates structural hazard (`Low`, `Medium`, `High`, `Critical / Emergency`).
-* **Automated Department Routing**: Maps issue to the responsible department (e.g., *Public Works Department*, *Water Supply Board*, *Electricity Board*, *Sanitation Dept*).
-* **AI Summary & Description**: Generates a concise title and one-line summary for authority dispatchers.
-* **Multilingual Voice-to-Report**: Citizens can speak in local languages; Gemini transcribes and formats the report.
-
-### 2. 🗺️ Spatial Mapping & Deduplication
-* **Live Heatmap Layer**: Visualizes high-density problem zones using Google Maps Heatmap Tile Layer.
-* **Radius-Based Deduplication**: When a new issue is submitted, the system checks existing reports within a 50m radius. If similar, it prompts: *"Is this the same issue as Pothole #4092?"* and converts the report into an upvote/confirmation.
-* **Proximity Push Notifications**: Nearby registered users (within 1km) receive alerts for newly confirmed critical hazards (e.g., open manhole).
-
-### 3. 👥 Community Verification & Gamification
-* **Status Audit Trail**: Users can submit "Verification Updates" (`Still Exists`, `Getting Worse`, `Work Started`, `Fully Fixed`).
-* **Proof-of-Fix Verification**: When authorities mark an issue as "Resolved", nearby users receive a request to upload a confirmation photo.
-* **Impact Badges & Leaderboard**: Earn civic karma points (`Civic Guardian`, `Eco Sentinel`, `Road Safety Champ`) for verified reports and updates.
-* **Civic Health Score**: Displays a district/neighborhood cleanliness and infrastructure rating based on resolved vs. open tickets.
-
-### 4. 🏢 Authority & Department Dashboard
-* **SLA & Escalation Timers**: Assigns target resolution windows based on severity (e.g., Critical: 24h, High: 72h).
-* **Route Optimization for Crews**: Groups nearby issues into efficient daily routes for repair workers.
-* **Transparent Analytics**: Publicly accessible resolution metrics (% issues resolved within SLA, average resolution time by department).
-
----
-
-## 🏗️ System Architecture & Tech Stack
+## 🏗️ Architecture & Tech Stack
 
 ```
- ┌─────────────────────────────────────────────────────────┐
- │                   Android Client                        │
- │  • Java / Kotlin (Material Design 3, View Binding)      │
- │  • Google Maps SDK, Fused Location Provider             │
- │  • CameraX / Image Picker + WorkManager                 │
- └────────────────────────────┬────────────────────────────┘
-                              │
-                    HTTPS API / SDK Calls
-                              │
- ┌────────────────────────────▼────────────────────────────┐
- │                   Firebase Backend                      │
- │  • Firebase Authentication (Email/Google/Phone OTP)     │
- │  • Cloud Firestore (Realtime DB & Spatial Queries)      │
- │  • Firebase Cloud Storage (Images & Compressed Assets)  │
- │  • Cloud Functions (FCM Triggers, Deduplication Logic)  │
- └────────────────────────────┬────────────────────────────┘
-                              │
- ┌────────────────────────────▼────────────────────────────┐
- │                     AI Engine                           │
- │  • Gemini 1.5 Flash / Pro Vision API                    │
- │  • Multimodal Visual Classification & PII Anonymization  │
- └─────────────────────────────────────────────────────────┘
+ ┌──────────────────────────────────────────────────────────────┐
+ │                    Android Native Client                     │
+ │  • Java 17 / Android SDK Target 36                          │
+ │  • ViewBinding, Material 3 Guidelines, Zero Raw Emojis       │
+ │  • osmdroid OpenStreetMap Engine (CartoDB Voyager Tiles)     │
+ └──────────────────────────────┬───────────────────────────────┘
+                                │
+                      HTTPS REST / Native APIs
+                                │
+ ┌──────────────────────────────▼───────────────────────────────┐
+ │                      Core Engine Layer                       │
+ │  • Gemini 1.5 Flash Vision Triage API                        │
+ │  • Storage Access Framework (SAF) PDF Ticket Generator        │
+ │  • 50m Haversine Spatial Deduplication Engine                │
+ │  • GeoLocationResolver (Android Geocoder + Pune Sectors)     │
+ │  • Room Database (SQLite Offline Cache & Sync Queue)         │
+ └──────────────────────────────────────────────────────────────┘
 ```
 
 ---
 
-## 🗄️ Database Schema (Cloud Firestore)
+## 📁 Repository Structure
 
-### Collection: `issues`
-```json
-{
-  "issueId": "iss_98234710",
-  "reporterUid": "usr_550e8400",
-  "category": "POTHOLE",
-  "severity": "HIGH",
-  "title": "Deep Pothole near Main Street Intersection",
-  "description": "Large road crater causing vehicle slowing and hazard for two-wheelers.",
-  "department": "PUBLIC_WORKS",
-  "imageUrl": "https://firebasestorage.googleapis.com/...",
-  "anonymizedImageUrl": "https://firebasestorage.googleapis.com/...",
-  "location": {
-    "latitude": 12.9716,
-    "longitude": 77.5946,
-    "geohash": "tdr2be7",
-    "address": "45 Main St, Sector 4"
-  },
-  "status": "TRIAGED", 
-  "confirmationsCount": 14,
-  "upvotes": 28,
-  "isDuplicate": false,
-  "parentIssueId": null,
-  "createdAt": 1722944800000,
-  "updatedAt": 1722948400000,
-  "slaDeadline": 1723204000000
-}
 ```
-
-### Collection: `verifications`
-```json
-{
-  "verificationId": "ver_12345",
-  "issueId": "iss_98234710",
-  "userUid": "usr_99812",
-  "statusVote": "STILL_EXISTS", 
-  "comment": "Still present as of this morning.",
-  "imageUrl": "https://firebasestorage.googleapis.com/...",
-  "timestamp": 1722950000000
-}
-```
-
-### Collection: `users`
-```json
-{
-  "uid": "usr_550e8400",
-  "displayName": "Alex Citizen",
-  "email": "alex@example.com",
-  "karmaPoints": 340,
-  "badgeLevel": "CIVIC_GUARDIAN",
-  "reportsSubmitted": 12,
-  "verificationsSubmitted": 25,
-  "createdAt": 1720000000000
-}
+CivicLens-AI/
+├── app/
+│   ├── src/main/java/com/example/civiclensai/
+│   │   ├── ai/               # GeminiTriageService (Vision API)
+│   │   ├── db/               # Room DB (AppDatabase, CivicIssueEntity, CivicIssueDao)
+│   │   ├── models/           # CivicIssue, IssueCategory, IssueSeverity, VerificationModel
+│   │   ├── repository/       # IssueRepository (Haversine Deduplication Engine)
+│   │   ├── ui/               # MainActivity, MapFragment, FeedFragment, ReportFragment,
+│   │   │   │                 # IssueDetailActivity, LeaderboardFragment
+│   │   │   ├── auth/         # SplashActivity, LoginActivity, RegisterActivity
+│   │   │   └── profile/      # ProfileFragment, EditProfileActivity
+│   │   └── utils/            # GeoLocationResolver, PdfReportGenerator, PrivacyBlurEngine,
+│   │                         # NotificationHelper, SessionManager, ProximityAlertHelper
+│   └── src/main/res/         # Material 3 Layouts, Drawables, Mipmaps, Values
+├── gradle/                   # Gradle wrapper & libs.versions.toml
+├── build.gradle              # Project build configuration
+└── README.md                 # Master Documentation
 ```
 
 ---
 
-## 📅 Implementation Phases
+## 🧪 Build & Verification Instructions
 
-```mermaid
-gantt
-    title CivicLens AI Development Plan
-    dateFormat  YYYY-MM-DD
-    section Phase 1: Foundation
-    Firebase & Auth Setup          :done, p1, 2026-08-07, 3d
-    CameraX & Location Capture     :active, p2, 2026-08-10, 4d
-    section Phase 2: AI Integration
-    Gemini API Prompt Engineering  :p3, 2026-08-14, 5d
-    Auto Categorization & Blur     :p4, 2026-08-19, 4d
-    section Phase 3: Maps & Real-time
-    Google Maps SDK & Clustering   :p5, 2026-08-23, 5d
-    Real-time Firestore Listeners  :p6, 2026-08-28, 4d
-    section Phase 4: Social & Verification
-    Upvotes, Verifications, Badges :p7, 2026-09-01, 5d
-    FCM Push Notifications         :p8, 2026-09-06, 3d
+### 1. Build Verification
+Run the standard Gradle check task from the project root:
+```powershell
+./gradlew check --no-daemon
+```
+
+### 2. Debug APK Assembly
+Compile the debug build bundle:
+```powershell
+./gradlew assembleDebug --no-daemon
 ```
 
 ---
 
-## 💡 Summary of Key Enhancements Added
+## 📜 License & Copyright
 
-1. **AI Safety & Privacy Guard**: Automated face and license plate anonymization prior to display.
-2. **Spatial & Visual Deduplication**: Prevents spamming authorities with multiple reports for the same issue.
-3. **SLA & Department Lifecycle**: Structured progress tracking from report to resolution.
-4. **Offline-First Support**: Android `WorkManager` queue for reporting without active internet connection.
-5. **Community Re-Verification**: Crowdsourced double-checking after municipal authorities flag an issue as "Fixed".
-6. **Detailed Firestore Data Schemas**: Complete JSON structures ready for app implementation.
+Designed and developed for **CivicLens AI Platform**.  
+*Empowering citizens, streamlining municipal dispatch, and building safer cities.*
