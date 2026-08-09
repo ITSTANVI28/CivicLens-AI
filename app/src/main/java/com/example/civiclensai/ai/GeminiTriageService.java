@@ -48,15 +48,27 @@ public class GeminiTriageService {
         public String description;
         public String department;
         public boolean isDuplicateCandidate;
+        public String repairCostEstimate;
+        public String recommendedMaterial;
+        public double hazardRiskScore;
 
         public TriageResult(IssueCategory category, IssueSeverity severity, String title,
-                            String description, String department, boolean isDuplicateCandidate) {
+                            String description, String department, boolean isDuplicateCandidate,
+                            String repairCostEstimate, String recommendedMaterial, double hazardRiskScore) {
             this.category = category;
             this.severity = severity;
             this.title = title;
             this.description = description;
             this.department = department;
             this.isDuplicateCandidate = isDuplicateCandidate;
+            this.repairCostEstimate = repairCostEstimate;
+            this.recommendedMaterial = recommendedMaterial;
+            this.hazardRiskScore = hazardRiskScore;
+        }
+
+        public TriageResult(IssueCategory category, IssueSeverity severity, String title,
+                            String description, String department, boolean isDuplicateCandidate) {
+            this(category, severity, title, description, department, isDuplicateCandidate, "₹3,500 – ₹6,000", "Cold-Mix Asphalt Patch", 7.8);
         }
     }
 
@@ -106,7 +118,10 @@ public class GeminiTriageService {
                         "  \"severity\": \"CRITICAL\" | \"HIGH\" | \"MEDIUM\" | \"LOW\",\n" +
                         "  \"title\": \"Short headline describing issue\",\n" +
                         "  \"description\": \"One sentence technical description of visual hazard\",\n" +
-                        "  \"department\": \"Responsible Municipal Department\"\n" +
+                        "  \"department\": \"Responsible Municipal Department\",\n" +
+                        "  \"repairCostEstimate\": \"Estimated Cost in INR Range e.g. ₹4,500 - ₹8,500\",\n" +
+                        "  \"recommendedMaterial\": \"Municipal repair material recommendation\",\n" +
+                        "  \"hazardRiskScore\": 0.0 to 10.0\n" +
                         "}";
                 textPart.put("text", prompt);
                 parts.put(textPart);
@@ -158,11 +173,14 @@ public class GeminiTriageService {
                             String title = triageJson.optString("title", "Civic Hazard Identified");
                             String desc = triageJson.optString("description", "Gemini AI detected infrastructure hazard.");
                             String dept = triageJson.optString("department", "Public Works Department");
+                            String cost = triageJson.optString("repairCostEstimate", "₹4,500 – ₹8,500");
+                            String mat = triageJson.optString("recommendedMaterial", "Hot-Mix Polymer Bituminous Patch");
+                            double risk = triageJson.optDouble("hazardRiskScore", 8.1);
 
                             IssueCategory category = parseCategory(catStr);
                             IssueSeverity severity = parseSeverity(sevStr);
 
-                            TriageResult result = new TriageResult(category, severity, title, desc, dept, false);
+                            TriageResult result = new TriageResult(category, severity, title, desc, dept, false, cost, mat, risk);
                             mainHandler.post(() -> callback.onSuccess(result));
                             return;
                         }
@@ -191,6 +209,9 @@ public class GeminiTriageService {
             String title;
             String description;
             String department;
+            String cost;
+            String material;
+            double risk;
 
             if (pixelHash == 0) {
                 category = IssueCategory.POTHOLE;
@@ -198,27 +219,39 @@ public class GeminiTriageService {
                 title = "Deep Road Pothole & Asphalt Crater";
                 description = "Gemini AI detected structural asphalt damage (~15cm depth) creating a hazard for two-wheelers and vehicles.";
                 department = "Public Works Department";
+                cost = "₹4,500 – ₹8,500";
+                material = "Hot-Mix Polymer Bituminous Asphalt Patch";
+                risk = 8.2;
             } else if (pixelHash == 1) {
                 category = IssueCategory.GARBAGE;
                 severity = IssueSeverity.MEDIUM;
                 title = "Overflowing Municipal Garbage Bin";
                 description = "Gemini AI detected uncollected waste accumulation spilling onto the pedestrian pathway.";
                 department = "Sanitation & Waste Dept";
+                cost = "₹2,000 – ₹4,000";
+                material = "Heavy-Duty Municipal Polyethylene Bin Module";
+                risk = 5.9;
             } else if (pixelHash == 2) {
                 category = IssueCategory.WATER_LEAK;
                 severity = IssueSeverity.CRITICAL;
                 title = "Pressurized Water Pipe Leakage";
                 description = "Gemini AI detected clean water pipe rupture causing localized street flooding and erosion risk.";
                 department = "Water Supply & Sewage Board";
+                cost = "₹12,000 – ₹25,000";
+                material = "Reinforced Ductile Iron Pipeline Sleeve";
+                risk = 9.4;
             } else {
                 category = IssueCategory.STREETLIGHT;
                 severity = IssueSeverity.LOW;
                 title = "Damaged Streetlight Fixture";
                 description = "Gemini AI identified a broken luminaire cover and non-functional LED unit on public pole.";
                 department = "Electrical Infrastructure Dept";
+                cost = "₹1,200 – ₹2,500";
+                material = "IP66 LED Luminaire Fixture & Wire Harness";
+                risk = 3.5;
             }
 
-            TriageResult result = new TriageResult(category, severity, title, description, department, false);
+            TriageResult result = new TriageResult(category, severity, title, description, department, false, cost, material, risk);
             callback.onSuccess(result);
         }, 1000);
     }

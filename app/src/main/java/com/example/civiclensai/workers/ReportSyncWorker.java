@@ -10,7 +10,11 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.example.civiclensai.models.CivicIssue;
+import com.example.civiclensai.repository.IssueRepository;
 import com.example.civiclensai.utils.NotificationHelper;
+
+import java.util.List;
 
 public class ReportSyncWorker extends Worker {
 
@@ -23,20 +27,24 @@ public class ReportSyncWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        Log.i(TAG, "Network connection restored! Executing background offline report synchronization...");
+        Log.i(TAG, "Network connection restored! Executing background offline report synchronization with Firebase Firestore...");
 
         try {
-            // Simulate syncing queued offline reports to Cloud Firestore
-            Thread.sleep(1500);
+            List<CivicIssue> issues = IssueRepository.getInstance().getIssues().getValue();
+            if (issues != null) {
+                for (CivicIssue issue : issues) {
+                    IssueRepository.getInstance().updateIssue(issue);
+                }
+            }
 
             NotificationHelper.showReportSubmittedNotification(
                     getApplicationContext(),
-                    "Offline Report Synchronized with Cloud"
+                    "Offline Reports Synchronized with Firebase Firestore"
             );
 
             return Result.success();
         } catch (Exception e) {
-            Log.e(TAG, "Error syncing offline report: " + e.getMessage());
+            Log.e(TAG, "Error syncing offline report to Firebase: " + e.getMessage());
             return Result.retry();
         }
     }
@@ -56,3 +64,4 @@ public class ReportSyncWorker extends Worker {
         WorkManager.getInstance(context).enqueue(syncRequest);
     }
 }
+

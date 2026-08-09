@@ -78,6 +78,20 @@
         </com.google.android.material.chip.ChipGroup>
     </HorizontalScrollView>
 
+    <!-- My Location Floating Action Button -->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabMyLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="90dp"
+        android:contentDescription="My Location"
+        app:backgroundTint="@color/white"
+        app:elevation="6dp"
+        app:srcCompat="@android:drawable/ic_menu_mylocation"
+        app:tint="@color/m3_primary" />
+
     <!-- Material 3 Surface Sheet Details preview when marker selected -->
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/bottomSheetCard"

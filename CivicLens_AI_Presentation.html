@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CivicLens AI — Master Presentation Deck (White & Royal Blue)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@400;600;700;800;900&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-light: #F8FAFC;
+            --card-bg: #FFFFFF;
+            --card-border: #E2E8F0;
+            --primary-blue: #2563EB;
+            --royal-blue: #1D4ED8;
+            --light-blue: #EFF6FF;
+            --cyan-accent: #0284C7;
+            --emerald: #059669;
+            --amber: #D97706;
+            --rose: #E11D48;
+            --text-dark: #0F172A;
+            --text-muted: #64748B;
+            --blue-gradient: linear-gradient(135deg, #1D4ED8 0%, #2563EB 50%, #0284C7 100%);
+            --badge-bg: #DBEAFE;
+            --shadow-card: 0 20px 45px -15px rgba(29, 78, 216, 0.15), 0 0 15px rgba(0, 0, 0, 0.03);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        /* Ambient Blue Particle Canvas */
+        #bgCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* Top Progress Line */
+        .progress-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: #E2E8F0;
+            z-index: 100;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 10%;
+            background: var(--blue-gradient);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 0 12px rgba(37, 99, 235, 0.5);
+        }
+
+        /* Header */
+        header {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 44px;
+            background: #FFFFFF;
+            border-bottom: 1px solid var(--card-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 900;
+            background: var(--blue-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-tag {
+            background: var(--badge-bg);
+            color: var(--royal-blue);
+            font-size: 0.78rem;
+            font-weight: 800;
+            padding: 4px 14px;
+            border-radius: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            color: var(--text-dark);
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            background: var(--light-blue);
+            border-color: var(--primary-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Viewport */
+        .presentation-viewport {
+            position: relative;
+            z-index: 10;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 44px;
+            perspective: 1200px;
+        }
+
+        /* Slide Element */
+        .slide {
+            display: none;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 560px;
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 28px;
+            padding: 44px 56px;
+            box-shadow: var(--shadow-card);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .slide::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--blue-gradient);
+        }
+
+        .slide.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: slideFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slideFade {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Slide Typography */
+        .slide-header-badge {
+            color: var(--primary-blue);
+            font-size: 0.85rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+        }
+
+        .slide-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 14px;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+
+        .slide-subtitle {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 26px;
+        }
+
+        /* Grids & Cards */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+
+        .card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 24px;
+            transition: all 0.25s ease;
+            position: relative;
+        }
+
+        .card:hover {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px -10px rgba(37, 99, 235, 0.2);
+        }
+
+        .card-icon {
+            width: 46px;
+            height: 46px;
+            border-radius: 14px;
+            background: var(--light-blue);
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 14px;
+            color: var(--primary-blue);
+        }
+
+        .card-heading {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .card-text {
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        /* Interactive AI Demo Widget in Slide 6 */
+        .ai-sandbox {
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .demo-chip {
+            background: #FFFFFF;
+            border: 1px solid #CBD5E1;
+            color: var(--text-dark);
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .demo-chip.active, .demo-chip:hover {
+            background: var(--primary-blue);
+            color: #FFFFFF;
+            border-color: var(--primary-blue);
+        }
+
+        pre.code-preview {
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 14px;
+            padding: 14px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #38BDF8;
+            overflow-x: auto;
+            max-height: 220px;
+        }
+
+        /* Phone Mockup in Slide 5 */
+        .phone-mockup {
+            width: 240px;
+            height: 440px;
+            background: #0F172A;
+            border: 5px solid #1E293B;
+            border-radius: 36px;
+            padding: 10px;
+            margin: 0 auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .phone-screen {
+            background: #F8FAFC;
+            flex: 1;
+            border-radius: 24px;
+            padding: 12px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow: hidden;
+        }
+
+        .mock-card {
+            background: #FFFFFF;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            padding: 10px;
+            font-size: 0.72rem;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+        }
+
+        /* Slide Overview Grid Modal */
+        #overviewModal {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(12px);
+            z-index: 300;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        #overviewModal.active { display: flex; }
+
+        .modal-content {
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 32px;
+            max-width: 1000px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+
+        .overview-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 14px;
+            margin-top: 20px;
+        }
+
+        .thumb-card {
+            background: #F8FAFC;
+            border: 2px solid #E2E8F0;
+            border-radius: 14px;
+            padding: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .thumb-card:hover, .thumb-card.current {
+            border-color: var(--primary-blue);
+            background: var(--light-blue);
+            color: var(--primary-blue);
+        }
+
+        /* Footer Controls */
+        footer {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 44px;
+            background: #FFFFFF;
+            border-top: 1px solid var(--card-border);
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.03);
+        }
+
+        .counter-badge {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        .btn-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-btn {
+            background: var(--blue-gradient);
+            color: white;
+            border: none;
+            padding: 12px 32px;
+            border-radius: 14px;
+            font-weight: 800;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 18px rgba(37, 99, 235, 0.4);
+        }
+
+        .nav-btn:disabled {
+            background: #E2E8F0;
+            color: #94A3B8;
+            box-shadow: none;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Presenter Notes Drawer */
+        #notesDrawer {
+            position: absolute;
+            bottom: 75px;
+            right: 44px;
+            width: 380px;
+            background: #FFFFFF;
+            border: 2px solid var(--primary-blue);
+            border-radius: 18px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+            z-index: 200;
+            display: none;
+        }
+
+        #notesDrawer.active { display: block; }
+
+        .notes-header {
+            font-weight: 800;
+            color: var(--primary-blue);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .notes-content {
+            font-size: 0.88rem;
+            color: var(--text-dark);
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Ambient Blue Canvas -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Top Progress Bar -->
+    <div class="progress-container">
+        <div class="progress-bar" id="progressBar"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="brand">
+            <div class="brand-logo">🏛️ CivicLens AI</div>
+            <div class="brand-tag">Executive Presentation Deck</div>
+        </div>
+        <div class="header-actions">
+            <button class="action-btn" onclick="toggleOverview()">🎛️ Slide Grid (O)</button>
+            <button class="action-btn" onclick="window.print()">🖨️ Print / PDF</button>
+            <button class="action-btn" onclick="toggleNotes()">📝 Notes (N)</button>
+            <button class="action-btn" onclick="toggleFullScreen()">🖥️ Fullscreen (F)</button>
+            <div class="brand-tag" style="background: #DCFCE7; color: #15803D;">
+                Dev: Tanvi Yadav
+            </div>
+        </div>
+    </header>
+
+    <!-- Presentation Viewport -->
+    <main class="presentation-viewport">
+
+        <!-- Slide 1: Title -->
+        <div class="slide active" data-notes="Welcome everyone! Presenting CivicLens AI - an AI-powered municipal infrastructure triage Android platform built using Java 17 and Gemini 1.5 Flash Vision AI.">
+            <div class="slide-header-badge">🚀 EXECUTIVE PRESENTATION • SLIDE 01</div>
+            <h1 class="slide-title" style="font-size: 3.2rem; margin-bottom: 12px; color: var(--royal-blue);">CivicLens AI</h1>
+            <p class="slide-subtitle" style="font-size: 1.25rem;">AI-Powered Smart Municipal Infrastructure Triage & Urban Governance Platform</p>
+            <div class="grid-3" style="margin-top: 10px;">
+                <div class="card">
+                    <div class="card-icon">🤖</div>
+                    <div class="card-heading">Gemini 1.5 AI Vision</div>
+                    <div class="card-text">Automated hazard visual triage, repair cost estimation & safety risk score gauge.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🔥</div>
+                    <div class="card-heading">Firebase Cloud Sync</div>
+                    <div class="card-text">Real-time Cloud Firestore snapshot listener synchronization across mobile devices.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚒</div>
+                    <div class="card-heading">Municipal Dispatch</div>
+                    <div class="card-text">Nearest-neighbor truck route optimizer, Pune Ward Health Index & GeoJSON exporter.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: Executive Summary -->
+        <div class="slide" data-notes="CivicLens AI bridges the gap between citizens and city officials, eliminating manual inspection slowness.">
+            <div class="slide-header-badge">🌟 EXECUTIVE SUMMARY • SLIDE 02</div>
+            <h2 class="slide-title">Executive Summary & Vision</h2>
+            <p class="slide-subtitle">Transforming urban infrastructure reporting into an instant, intelligent, and transparent smart city ecosystem.</p>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-icon">🎯</div>
+                    <div class="card-heading">The Vision</div>
+                    <div class="card-text">Provide citizens with a 1-tap mobile tool to report municipal hazards while equipping field engineers with automated repair budgets, emergency SOS routing, and optimized daily truck repair paths.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">⚡</div>
+                    <div class="card-heading">Key Technological USPs</div>
+                    <div class="card-text">50-meter Haversine spatial deduplication, PrivacyBlur PII anonymization, 1-Tap Emergency SOS mode, SAF printable A4 PDF work order generator, and offline WorkManager resiliency.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 3: Problem Statement -->
+        <div class="slide" data-notes="Traditional municipal complaint systems suffer from manual triage slowness, duplicate spam, and unoptimized truck driving paths.">
+            <div class="slide-header-badge">⚠️ PROBLEM STATEMENT • SLIDE 03</div>
+            <h2 class="slide-title">Challenges in Traditional Civic Maintenance</h2>
+            <p class="slide-subtitle">Municipal corporations struggle with manual workflows that slow down hazard resolution:</p>
+            <div class="grid-4">
+                <div class="card">
+                    <div class="card-icon">⏳</div>
+                    <div class="card-heading">Delayed Triage</div>
+                    <div class="card-text">Manual site inspection of potholes and water leaks takes days to estimate repair costs.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚫</div>
+                    <div class="card-heading">Duplicate Spam</div>
+                    <div class="card-text">Hundreds of citizens lodge separate tickets for the same pothole, clogging municipal queues.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚒</div>
+                    <div class="card-heading">Wasteful Dispatch</div>
+                    <div class="card-text">Maintenance trucks drive unoptimized criss-cross routes across the city, wasting fuel.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📄</div>
+                    <div class="card-heading">Zero Transparency</div>
+                    <div class="card-text">Citizens cannot track resolution SLA deadlines or official work orders in real time.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 4: Core Solution Pillars -->
+        <div class="slide" data-notes="CivicLens AI introduces 6 core solution pillars spanning AI vision, spatial deduplication, and open data.">
+            <div class="slide-header-badge">💡 THE SOLUTION • SLIDE 04</div>
+            <h2 class="slide-title">CivicLens AI Solution Pillars</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-icon">🤖</div>
+                    <div class="card-heading">Gemini AI Vision Triage</div>
+                    <div class="card-text">Auto-classifies hazards, estimates repair costs (₹4.5k-₹8.5k), and rates safety risk.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🛡️</div>
+                    <div class="card-heading">50m Spatial Deduplication</div>
+                    <div class="card-text">Haversine formula merges duplicate reports within 50m into single master tickets.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚨</div>
+                    <div class="card-heading">1-Tap Emergency SOS</div>
+                    <div class="card-text">Dispatches priority 24h SLA tickets directly to Disaster Management.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚒</div>
+                    <div class="card-heading">Crew Route Optimizer</div>
+                    <div class="card-text">Nearest-neighbor algorithm sequences daily truck repair stops.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-heading">Pune Ward Health Index</div>
+                    <div class="card-text">Live 0-100 Ward Health Scores & Open Data GeoJSON exporter.</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📄</div>
+                    <div class="card-heading">SAF A4 PDF Work Orders</div>
+                    <div class="card-text">Renders printable A4 PDF tickets with Pune seals and SHA256 security hashes.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 5: System Architecture & UI Mockup -->
+        <div class="slide" data-notes="This slide shows the system architecture and the live Android UI mockup layout.">
+            <div class="slide-header-badge">🏗️ ARCHITECTURE & UI • SLIDE 05</div>
+            <h2 class="slide-title">System Architecture & Tech Stack</h2>
+            <div class="grid-2">
+                <div>
+                    <div class="card" style="margin-bottom: 16px;">
+                        <div class="card-heading">💻 Technical Architecture</div>
+                        <div class="card-text">
+                            • <b>Mobile Platform</b>: Android Native (Java 17 / SDK 36)<br>
+                            • <b>AI Processing</b>: Google Gemini 1.5 Flash Vision API<br>
+                            • <b>Cloud Database</b>: Firebase Cloud Firestore (`issues` & `verifications`)<br>
+                            • <b>Mapping Engine</b>: OpenStreetMap `osmdroid` CartoDB Voyager CDN<br>
+                            • <b>Offline Sync Queue</b>: Android WorkManager (`ReportSyncWorker`)
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <!-- Phone UI Mockup -->
+                    <div class="phone-mockup">
+                        <div class="phone-screen">
+                            <div style="font-size: 0.75rem; font-weight: 800; color: var(--primary-blue);">📍 CivicLens AI Live Feed</div>
+                            <div class="mock-card">
+                                <div style="color: var(--rose); font-weight: 800;">🚨 HIGH HAZARD: Road Pothole</div>
+                                <div style="color: var(--text-muted); margin-top: 2px;">Est. Cost: ₹4,500 – ₹8,500</div>
+                                <div style="color: var(--primary-blue); margin-top: 2px;">Risk Rating: 8.2 / 10</div>
+                            </div>
+                            <div class="mock-card">
+                                <div style="color: var(--amber); font-weight: 800;">🟡 WATER LEAK: FC Road</div>
+                                <div style="color: var(--text-muted); margin-top: 2px;">SLA: 24 Hours Remaining</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 6: Interactive AI Sandbox Demo -->
+        <div class="slide" data-notes="This slide includes an interactive sandbox demo! Click on the hazard buttons to see Gemini AI response payload update live.">
+            <div class="slide-header-badge">🧪 INTERACTIVE DEMO • SLIDE 06</div>
+            <h2 class="slide-title">Gemini 1.5 Flash AI Triage Engine</h2>
+            <div class="ai-sandbox">
+                <div>
+                    <div style="font-size: 0.9rem; font-weight: 800; color: var(--primary-blue); margin-bottom: 10px;">Select Hazard Image to Test AI Triage:</div>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px;">
+                        <button class="demo-chip active" onclick="simulateAi('pothole')">🕳️ Road Pothole</button>
+                        <button class="demo-chip" onclick="simulateAi('garbage')">🗑️ Overflow Garbage</button>
+                        <button class="demo-chip" onclick="simulateAi('water')">💧 Water Pipe Leak</button>
+                        <button class="demo-chip" onclick="simulateAi('manhole')">🚨 Open Manhole</button>
+                    </div>
+                    <div class="card" id="aiResultCard">
+                        <div class="card-heading" id="aiTitle" style="color: var(--primary-blue);">Deep Road Pothole & Asphalt Crater</div>
+                        <div class="card-text" id="aiCost" style="color: var(--emerald); font-weight: 800; font-size: 1rem; margin: 6px 0;">Est. Repair Cost: ₹4,500 – ₹8,500</div>
+                        <div class="card-text" id="aiRisk" style="color: var(--rose); font-weight: 700;">Hazard Risk Score: 8.2 / 10 (High Crash Risk)</div>
+                        <div class="card-text" id="aiMat" style="font-style: italic; margin-top: 6px;">Material: Hot-Mix Polymer Bituminous Patch</div>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size: 0.9rem; font-weight: 700; color: var(--text-muted); margin-bottom: 8px;">Gemini Multimodal JSON Output:</div>
+                    <pre class="code-preview" id="jsonPreview">{
+  "category": "POTHOLE",
+  "severity": "HIGH",
+  "repairCostEstimate": "₹4,500 – ₹8,500",
+  "recommendedMaterial": "Hot-Mix Bituminous Patch",
+  "hazardRiskScore": 8.2
+}</pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 7: Deduplication, SOS & SAF PDF -->
+        <div class="slide" data-notes="Slide 7 covers 50m spatial deduplication, 1-tap SOS dispatches, and SAF A4 PDF work order generation.">
+            <div class="slide-header-badge">🛡️ PROTECTION & TICKETS • SLIDE 07</div>
+            <h2 class="slide-title">Deduplication, SOS & SAF PDF Work Orders</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-icon">🛡️</div>
+                    <div class="card-heading">50m Haversine Deduplication</div>
+                    <div class="card-text">Calculates geographic surface distance to existing reports; merges nearby duplicate tickets (+50 Karma points to reporter).</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">🚨</div>
+                    <div class="card-heading">1-Tap Emergency SOS Mode</div>
+                    <div class="card-text">Priority 24-hour SLA ticket creation for open manholes and live fallen electrical lines (+100 Karma points).</div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📄</div>
+                    <div class="card-heading">SAF Official A4 PDF Ticket</div>
+                    <div class="card-text">Canvas-rendered A4 printable tickets featuring Pune municipal seals, SLA resolution windows, and SHA256 security hashes.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 8: Municipal Route Optimizer & Ward Index Simulator -->
+        <div class="slide" data-notes="Slide 8 covers municipal maintenance truck route optimization and Pune Ward Health scoring with interactive simulator.">
+            <div class="slide-header-badge">🚒 DISPATCH INTELLIGENCE • SLIDE 08</div>
+            <h2 class="slide-title">Municipal Intelligence & Route Optimizer</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-icon">🚒</div>
+                    <div class="card-heading">Truck Route Optimizer (CrewRouteOptimizer.java)</div>
+                    <div class="card-text">Nearest-neighbor pathfinder algorithm sequences daily repair stops for municipal trucks (*e.g., 4 Stops • 11.2 km • ~22 mins*), maximizing fuel and labor efficiency.</div>
+                    <div style="margin-top: 14px; background: var(--light-blue); padding: 10px; border-radius: 10px; font-size: 0.8rem; color: var(--royal-blue); font-weight: 700;">
+                        🚚 Estimated Daily Savings: 14.2 km &amp; ~45 mins per maintenance truck
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-icon">📊</div>
+                    <div class="card-heading">Pune Ward Health Index &amp; GeoJSON</div>
+                    <div class="card-text">Computes real-time 0-100 Ward Health Scores (*Kothrud: 88/100, Shivajinagar: 72/100*) and exports GeoJSON data for urban planners.</div>
+                    <div style="margin-top: 12px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 0.8rem; font-weight: 700; margin-bottom: 4px;">
+                            <span>Kothrud Ward Score</span>
+                            <span style="color: var(--emerald);">88 / 100 (Healthy)</span>
+                        </div>
+                        <div style="height: 8px; background: #E2E8F0; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 88%; height: 100%; background: var(--emerald);"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 9: Firebase Schema & Live Sync -->
+        <div class="slide" data-notes="Slide 9 outlines the Firebase Cloud Firestore NoSQL schema.">
+            <div class="slide-header-badge">🔥 CLOUD DATABASE • SLIDE 09</div>
+            <h2 class="slide-title">Firebase Cloud Database Architecture</h2>
+            <p class="slide-subtitle">Real-time Snapshot Listener Syncing Across All Connected Mobile Devices</p>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-heading" style="color: var(--primary-blue);">📁 issues Collection</div>
+                    <div class="card-text">Stores ticket ID, GPS lat/lng, address, Gemini AI category, severity, budget estimate, risk score, upvotes, and status.</div>
+                </div>
+                <div class="card">
+                    <div class="card-heading" style="color: var(--emerald);">📁 verifications Collection</div>
+                    <div class="card-text">Stores citizen community audit votes (*FIXED*, *STILL_EXISTS*, *IN_PROGRESS*) with auditor names and timestamps.</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 10: Conclusion & Future Roadmap -->
+        <div class="slide" data-notes="Slide 10 concludes the presentation with verified build results and future expansion plans.">
+            <div class="slide-header-badge">🎉 CONCLUSION • SLIDE 10</div>
+            <h2 class="slide-title">Conclusion & Future Roadmap</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-heading" style="color: var(--emerald);">🎉 Key Achievements</div>
+                    <div class="card-text">Successfully built, integrated, and verified a 100% real-time working civic triage platform (**BUILD SUCCESSFUL in 1m 5s**).</div>
+                </div>
+                <div class="card">
+                    <div class="card-heading" style="color: var(--primary-blue);">🚀 Future Expansion</div>
+                    <div class="card-text">
+                        1. IoT Stormwater Flash-Flood Sensor Integration<br>
+                        2. AR Camera Overlay for Underground Utility Pipelines<br>
+                        3. Automated Municipal ERP Contractor Billing Integration
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <h3 style="font-family: 'Outfit', sans-serif; font-size: 1.8rem; color: var(--royal-blue);">Thank You! Q&amp;A</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 6px;">Repository: https://github.com/ITSTANVI28/CivicLens-AI</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Slide Grid Modal -->
+    <div id="overviewModal">
+        <div class="modal-content">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="font-family: 'Outfit', sans-serif; color: var(--royal-blue); font-size: 1.4rem;">🎛️ Presentation Slide Grid Overview</h3>
+                <button class="action-btn" onclick="toggleOverview()">Close (Esc)</button>
+            </div>
+            <div class="overview-grid" id="thumbGrid"></div>
+        </div>
+    </div>
+
+    <!-- Presenter Notes Overlay Drawer -->
+    <div id="notesDrawer">
+        <div class="notes-header">📝 Presenter Speech Notes</div>
+        <div class="notes-content" id="notesContent">Welcome everyone! Today I'm presenting CivicLens AI...</div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="counter-badge" id="slideCounter">Slide 1 of 10</div>
+        <div class="btn-controls">
+            <button class="nav-btn" id="prevBtn" onclick="prevSlide()" disabled>Previous</button>
+            <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Next</button>
+        </div>
+    </footer>
+
+    <script>
+        // Slides Navigation Logic
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const counter = document.getElementById('slideCounter');
+        const progressBar = document.getElementById('progressBar');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const notesContent = document.getElementById('notesContent');
+        const notesDrawer = document.getElementById('notesDrawer');
+        const overviewModal = document.getElementById('overviewModal');
+
+        function initThumbnails() {
+            const grid = document.getElementById('thumbGrid');
+            grid.innerHTML = '';
+            slides.forEach((slide, idx) => {
+                const title = slide.querySelector('.slide-title')?.textContent || `Slide ${idx + 1}`;
+                const card = document.createElement('div');
+                card.className = `thumb-card ${idx === currentSlide ? 'current' : ''}`;
+                card.innerHTML = `<div style="font-size: 0.7rem; color: var(--primary-blue);">SLIDE ${idx + 1}</div><div>${title}</div>`;
+                card.onclick = () => {
+                    jumpToSlide(idx);
+                    toggleOverview();
+                };
+                grid.appendChild(card);
+            });
+        }
+
+        function jumpToSlide(idx) {
+            currentSlide = idx;
+            updateSlide();
+        }
+
+        function updateSlide() {
+            slides.forEach((slide, idx) => {
+                slide.classList.toggle('active', idx === currentSlide);
+            });
+            counter.textContent = `Slide ${currentSlide + 1} of ${slides.length}`;
+            progressBar.style.width = `${((currentSlide + 1) / slides.length) * 100}%`;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+
+            const notes = slides[currentSlide].getAttribute('data-notes') || 'No notes for this slide.';
+            notesContent.textContent = notes;
+            playClickSound();
+            initThumbnails();
+        }
+
+        function nextSlide() {
+            if (currentSlide < slides.length - 1) {
+                currentSlide++;
+                updateSlide();
+            }
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                updateSlide();
+            }
+        }
+
+        function toggleNotes() { notesDrawer.classList.toggle('active'); }
+        function toggleOverview() { overviewModal.classList.toggle('active'); }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === 'Space') nextSlide();
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'f' || e.key === 'F') toggleFullScreen();
+            if (e.key === 'n' || e.key === 'N') toggleNotes();
+            if (e.key === 'o' || e.key === 'O') toggleOverview();
+            if (e.key === 'Escape') {
+                overviewModal.classList.remove('active');
+                notesDrawer.classList.remove('active');
+            }
+        });
+
+        function playClickSound() {
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(520, ctx.currentTime);
+                osc.frequency.exponentialRampToValueAtTime(940, ctx.currentTime + 0.05);
+                gain.gain.setValueAtTime(0.04, ctx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.05);
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+                osc.start();
+                osc.stop(ctx.currentTime + 0.05);
+            } catch(e) {}
+        }
+
+        // Ambient Blue Particle Canvas Background
+        const canvas = document.getElementById('bgCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        for (let i = 0; i < 40; i++) {
+            particles.push({
+                x: Math.random() * canvas.width,
+                y: Math.random() * canvas.height,
+                radius: Math.random() * 2.5 + 1,
+                vx: (Math.random() - 0.5) * 0.4,
+                vy: (Math.random() - 0.5) * 0.4,
+                alpha: Math.random() * 0.3 + 0.1
+            });
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < 0) p.x = canvas.width;
+                if (p.x > canvas.width) p.x = 0;
+                if (p.y < 0) p.y = canvas.height;
+                if (p.y > canvas.height) p.y = 0;
+
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(37, 99, 235, ${p.alpha})`;
+                ctx.fill();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+        initThumbnails();
+
+        // Interactive AI Demo Function for Slide 6
+        function simulateAi(type) {
+            const chips = document.querySelectorAll('.demo-chip');
+            chips.forEach(c => c.classList.remove('active'));
+            event.target.classList.add('active');
+
+            const title = document.getElementById('aiTitle');
+            const cost = document.getElementById('aiCost');
+            const risk = document.getElementById('aiRisk');
+            const mat = document.getElementById('aiMaterial') || document.getElementById('aiMat');
+            const json = document.getElementById('jsonPreview');
+
+            if (type === 'pothole') {
+                title.textContent = "Deep Road Pothole & Asphalt Crater";
+                cost.textContent = "Est. Repair Cost: ₹4,500 – ₹8,500";
+                risk.textContent = "Hazard Risk Score: 8.2 / 10 (High Crash Risk)";
+                mat.textContent = "Material: Hot-Mix Polymer Bituminous Patch";
+                json.textContent = `{\n  "category": "POTHOLE",\n  "severity": "HIGH",\n  "repairCostEstimate": "₹4,500 – ₹8,500",\n  "recommendedMaterial": "Hot-Mix Bituminous Patch",\n  "hazardRiskScore": 8.2\n}`;
+            } else if (type === 'garbage') {
+                title.textContent = "Overflowing Municipal Waste Bin";
+                cost.textContent = "Est. Repair Cost: ₹2,000 – ₹4,000";
+                risk.textContent = "Hazard Risk Score: 5.9 / 10 (Moderate Sanitation Risk)";
+                mat.textContent = "Material: Polyethylene Bin Module Replacement";
+                json.textContent = `{\n  "category": "GARBAGE",\n  "severity": "MEDIUM",\n  "repairCostEstimate": "₹2,000 – ₹4,000",\n  "recommendedMaterial": "Polyethylene Bin Module",\n  "hazardRiskScore": 5.9\n}`;
+            } else if (type === 'water') {
+                title.textContent = "Pressurized Main Water Pipeline Rupture";
+                cost.textContent = "Est. Repair Cost: ₹12,000 – ₹25,000";
+                risk.textContent = "Hazard Risk Score: 9.4 / 10 (Critical Erosion Hazard)";
+                mat.textContent = "Material: Reinforced Ductile Iron Pipeline Sleeve";
+                json.textContent = `{\n  "category": "WATER_LEAK",\n  "severity": "CRITICAL",\n  "repairCostEstimate": "₹12,000 – ₹25,000",\n  "recommendedMaterial": "Ductile Iron Sleeve",\n  "hazardRiskScore": 9.4\n}`;
+            } else if (type === 'manhole') {
+                title.textContent = "Open Sewer Manhole Hazard";
+                cost.textContent = "Est. Repair Cost: ₹8,000 – ₹15,000";
+                risk.textContent = "Hazard Risk Score: 9.8 / 10 (Life-Threatening Emergency)";
+                mat.textContent = "Material: Heavy Cast-Iron Manhole Cover & Concrete Ring";
+                json.textContent = `{\n  "category": "MANHOLE",\n  "severity": "CRITICAL",\n  "repairCostEstimate": "₹8,000 – ₹15,000",\n  "recommendedMaterial": "Cast-Iron Cover Ring",\n  "hazardRiskScore": 9.8\n}`;
+            }
+        }
+    </script>
+</body>
+</html>

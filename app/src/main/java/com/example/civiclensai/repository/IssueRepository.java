@@ -1,5 +1,6 @@
 package com.example.civiclensai.repository;
 
+import android.util.Log;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
@@ -9,12 +10,15 @@ import com.example.civiclensai.models.IssueSeverity;
 import com.example.civiclensai.models.IssueStatus;
 import com.example.civiclensai.models.VerificationModel;
 import com.example.civiclensai.utils.GeoUtils;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class IssueRepository {
 
+    private static final String TAG = "IssueRepository";
     public static final double DEDUPLICATION_RADIUS_METERS = 50.0;
 
     private static IssueRepository instance;
@@ -34,6 +38,7 @@ public class IssueRepository {
 
     private IssueRepository() {
         seedSampleData();
+        listenToFirestoreUpdates();
     }
 
     public static synchronized IssueRepository getInstance() {
@@ -48,7 +53,8 @@ public class IssueRepository {
     }
 
     /**
-     * Adds an issue with spatial deduplication checking against active issues within a 50m radius.
+     * Adds an issue with spatial deduplication checking against active issues within a 50m radius,
+     * and saves/syncs the record directly to Firebase Firestore.
      */
     public SubmissionResult addIssueWithDeduplication(CivicIssue newIssue) {
         if (newIssue.getId() == null || newIssue.getId().isEmpty()) {
@@ -75,14 +81,19 @@ public class IssueRepository {
                 newIssue.setDuplicate(true);
                 newIssue.setParentIssueId(existing.getId());
 
+                saveToFirebaseFirestore(existing);
+                saveToFirebaseFirestore(newIssue);
+
                 issuesLiveData.postValue(new ArrayList<>(issuesList));
                 return new SubmissionResult(true, existing);
             }
         }
 
-        // Unique issue report: add to top of feed
+        // Unique issue report: add to top of feed & sync to Firebase Firestore
         issuesList.add(0, newIssue);
         issuesLiveData.postValue(new ArrayList<>(issuesList));
+        saveToFirebaseFirestore(newIssue);
+
         return new SubmissionResult(false, newIssue);
     }
 
@@ -94,6 +105,7 @@ public class IssueRepository {
         for (CivicIssue issue : issuesList) {
             if (issue.getId().equals(issueId)) {
                 issue.setUpvotesCount(issue.getUpvotesCount() + 1);
+                saveToFirebaseFirestore(issue);
                 break;
             }
         }
@@ -106,6 +118,8 @@ public class IssueRepository {
         current.add(0, verification);
         verificationsLiveData.postValue(current);
 
+        syncVerificationToFirestore(verification);
+
         // Update issue status if vote is FIXED
         if ("FIXED".equalsIgnoreCase(verification.getStatusVote())) {
             for (CivicIssue issue : issuesList) {
@@ -114,6 +128,7 @@ public class IssueRepository {
                     if (issue.getConfirmationsCount() >= 3) {
                         issue.setStatus(IssueStatus.RESOLVED);
                     }
+                    saveToFirebaseFirestore(issue);
                     break;
                 }
             }
@@ -125,6 +140,7 @@ public class IssueRepository {
         for (int i = 0; i < issuesList.size(); i++) {
             if (issuesList.get(i).getId().equals(updatedIssue.getId())) {
                 issuesList.set(i, updatedIssue);
+                saveToFirebaseFirestore(updatedIssue);
                 break;
             }
         }
@@ -135,6 +151,7 @@ public class IssueRepository {
         for (int i = 0; i < issuesList.size(); i++) {
             if (issuesList.get(i).getId().equals(issueId)) {
                 issuesList.remove(i);
+                deleteFromFirebaseFirestore(issueId);
                 break;
             }
         }
@@ -161,6 +178,74 @@ public class IssueRepository {
             }
         }
         return null;
+    }
+
+    /**
+     * Saves or updates a CivicIssue record directly in Firebase Firestore 'issues' collection.
+     */
+    private void saveToFirebaseFirestore(CivicIssue issue) {
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("issues")
+                    .document(issue.getId())
+                    .set(issue)
+                    .addOnSuccessListener(aVoid -> Log.i(TAG, "🔥 Report successfully saved to Firebase Firestore: " + issue.getId()))
+                    .addOnFailureListener(e -> Log.e(TAG, "Firebase Firestore save error: " + e.getMessage()));
+        } catch (Exception e) {
+            Log.w(TAG, "Firebase Firestore save skipped (google-services.json unconfigured or offline mode active): " + e.getMessage());
+        }
+    }
+
+    private void deleteFromFirebaseFirestore(String issueId) {
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("issues").document(issueId).delete();
+        } catch (Exception ignored) {}
+    }
+
+    private void syncVerificationToFirestore(VerificationModel verification) {
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("verifications")
+                    .document(verification.getId())
+                    .set(verification);
+        } catch (Exception ignored) {}
+    }
+
+    /**
+     * Listens to real-time Cloud Firestore updates and syncs incoming records automatically.
+     */
+    private void listenToFirestoreUpdates() {
+        try {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            db.collection("issues").addSnapshotListener((snapshots, e) -> {
+                if (e != null || snapshots == null || snapshots.isEmpty()) return;
+                boolean updated = false;
+                for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                    CivicIssue remoteIssue = doc.toObject(CivicIssue.class);
+                    if (remoteIssue != null && remoteIssue.getId() != null) {
+                        boolean exists = false;
+                        for (int i = 0; i < issuesList.size(); i++) {
+                            if (issuesList.get(i).getId().equals(remoteIssue.getId())) {
+                                issuesList.set(i, remoteIssue);
+                                exists = true;
+                                updated = true;
+                                break;
+                            }
+                        }
+                        if (!exists) {
+                            issuesList.add(0, remoteIssue);
+                            updated = true;
+                        }
+                    }
+                }
+                if (updated) {
+                    issuesLiveData.postValue(new ArrayList<>(issuesList));
+                }
+            });
+        } catch (Exception e) {
+            Log.w(TAG, "Firebase Firestore realtime listener standby mode: " + e.getMessage());
+        }
     }
 
     private void seedSampleData() {
@@ -229,3 +314,4 @@ public class IssueRepository {
         issuesLiveData.setValue(new ArrayList<>(issuesList));
     }
 }
+

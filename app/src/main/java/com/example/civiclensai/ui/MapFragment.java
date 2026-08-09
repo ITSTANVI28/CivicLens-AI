@@ -1,24 +1,32 @@
 package com.example.civiclensai.ui;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+
 import com.example.civiclensai.databinding.FragmentMapBinding;
 import com.example.civiclensai.models.CivicIssue;
 import com.example.civiclensai.models.IssueCategory;
 import com.example.civiclensai.repository.IssueRepository;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.OnlineTileSourceBase;
-import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.tileprovider.tilesource.XYTileSource;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
@@ -33,6 +41,21 @@ public class MapFragment extends Fragment {
     private CivicIssue selectedIssue;
     private List<CivicIssue> currentIssues = new ArrayList<>();
     private IssueCategory currentCategoryFilter = null; // null means ALL
+    private GeoPoint myLocationPoint = null;
+    private FusedLocationProviderClient fusedLocationClient;
+
+    private final ActivityResultLauncher<String[]> locationPermissionLauncher = registerForActivityResult(
+            new ActivityResultContracts.RequestMultiplePermissions(),
+            permissions -> {
+                Boolean fineGranted = permissions.getOrDefault(Manifest.permission.ACCESS_FINE_LOCATION, false);
+                Boolean coarseGranted = permissions.getOrDefault(Manifest.permission.ACCESS_COARSE_LOCATION, false);
+                if (Boolean.TRUE.equals(fineGranted) || Boolean.TRUE.equals(coarseGranted)) {
+                    fetchRealTimeLocationAndCenter(true);
+                } else {
+                    Toast.makeText(requireContext(), "Location permission denied. Cannot show self location.", Toast.LENGTH_SHORT).show();
+                }
+            }
+    );
 
     // High-performance OpenStreetMap CartoDB Voyager tile source (CDN served, 0 blocks)
     public static final OnlineTileSourceBase CARTO_VOYAGER = new XYTileSource(
@@ -69,6 +92,8 @@ public class MapFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+
         // Configure OpenStreetMap View using CartoDB Voyager tiles (fast, beautiful, no 403 errors)
         binding.mapView.setTileSource(CARTO_VOYAGER);
         binding.mapView.setMultiTouchControls(true);
@@ -81,6 +106,8 @@ public class MapFragment extends Fragment {
 
         // Filter chips logic
         setupFilterChips();
+
+        binding.fabMyLocation.setOnClickListener(v -> fetchRealTimeLocationAndCenter(true));
 
         binding.btnViewDetails.setOnClickListener(v -> {
             if (selectedIssue != null) {
@@ -95,6 +122,39 @@ public class MapFragment extends Fragment {
             if (issues != null) {
                 this.currentIssues = issues;
                 renderMapMarkers();
+            }
+        });
+
+        // Check if location permission is already granted and mark self location silently
+        fetchRealTimeLocationAndCenter(false);
+    }
+
+    private void fetchRealTimeLocationAndCenter(boolean shouldCenter) {
+        if (getContext() == null) return;
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (shouldCenter) {
+                locationPermissionLauncher.launch(new String[]{
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                });
+            }
+            return;
+        }
+
+        if (fusedLocationClient == null) {
+            fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity());
+        }
+
+        fusedLocationClient.getLastLocation().addOnSuccessListener(requireActivity(), location -> {
+            if (location != null && binding != null) {
+                myLocationPoint = new GeoPoint(location.getLatitude(), location.getLongitude());
+                renderMapMarkers();
+                if (shouldCenter && binding.mapView != null) {
+                    binding.mapView.getController().setZoom(16.0);
+                    binding.mapView.getController().animateTo(myLocationPoint);
+                    Toast.makeText(requireContext(), "📍 Centered on your real-time GPS location!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -127,6 +187,16 @@ public class MapFragment extends Fragment {
 
         // Clear existing overlays
         binding.mapView.getOverlays().clear();
+
+        // Render Self Location Marker if present
+        if (myLocationPoint != null) {
+            Marker selfMarker = new Marker(binding.mapView);
+            selfMarker.setPosition(myLocationPoint);
+            selfMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            selfMarker.setTitle("📍 My Location (Self)");
+            selfMarker.setSnippet("You are currently here");
+            binding.mapView.getOverlays().add(selfMarker);
+        }
 
         if (currentIssues == null || currentIssues.isEmpty()) {
             binding.mapView.invalidate();
@@ -161,7 +231,7 @@ public class MapFragment extends Fragment {
             binding.mapView.getOverlays().add(marker);
         }
 
-        if (firstMatchingPoint != null) {
+        if (firstMatchingPoint != null && myLocationPoint == null) {
             binding.mapView.getController().animateTo(firstMatchingPoint);
         }
 
@@ -188,6 +258,7 @@ public class MapFragment extends Fragment {
         if (binding != null && binding.mapView != null) {
             binding.mapView.onResume();
         }
+        fetchRealTimeLocationAndCenter(false);
     }
 
     @Override
@@ -207,3 +278,4 @@ public class MapFragment extends Fragment {
         super.onDestroyView();
     }
 }
+

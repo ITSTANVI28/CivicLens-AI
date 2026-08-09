@@ -85,6 +85,20 @@ public class IssueDetailActivity extends AppCompatActivity {
         binding.tvDetailDepartment.setText("Assigned Department: " + issue.getDepartment());
         binding.btnDetailUpvote.setText("Upvote (" + issue.getUpvotesCount() + ")");
 
+        // Render Gemini AI Repair Cost, Risk Score & Material Recommendation
+        if (issue.getRepairCostEstimate() != null) {
+            binding.tvRepairCost.setText(issue.getRepairCostEstimate());
+        }
+        if (issue.getRecommendedMaterial() != null) {
+            binding.tvMaterialRec.setText("Recommended Material: " + issue.getRecommendedMaterial());
+        }
+        binding.tvRiskScore.setText(String.format(java.util.Locale.US, "%.1f / 10", issue.getHazardRiskScore()));
+        try {
+            int riskColor = issue.getHazardRiskScore() >= 8.0 ? Color.parseColor("#DC2626") :
+                            (issue.getHazardRiskScore() >= 5.0 ? Color.parseColor("#D97706") : Color.parseColor("#059669"));
+            binding.tvRiskScore.setBackgroundColor(riskColor);
+        } catch (Exception ignored) {}
+
         try {
             binding.tvDetailSeverity.setBackgroundColor(Color.parseColor(issue.getSeverity().getHexColor()));
         } catch (Exception ignored) {}

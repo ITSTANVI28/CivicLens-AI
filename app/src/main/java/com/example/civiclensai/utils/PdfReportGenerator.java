@@ -193,22 +193,33 @@ public class PdfReportGenerator {
         textPaint.setColor(Color.parseColor("#1E40AF"));
         textPaint.setTextSize(11);
         textPaint.setFakeBoldText(true);
-        canvas.drawText("3. HAZARD DESCRIPTION & GEMINI AI VISION TRIAGE SUMMARY", 48, descY + 26, textPaint);
+        canvas.drawText("3. HAZARD DESCRIPTION & GEMINI AI VISION TRIAGE SUMMARY", 48, descY + 24, textPaint);
 
         textPaint.setColor(Color.parseColor("#1E293B"));
-        textPaint.setTextSize(10);
+        textPaint.setTextSize(9);
         textPaint.setFakeBoldText(false);
 
         // Multi-line Description Text Wrapper
         String desc = issue.getDescription();
         int maxCharsPerLine = 82;
-        int currentY = descY + 52;
+        int currentY = descY + 44;
         for (int i = 0; i < desc.length(); i += maxCharsPerLine) {
             String line = desc.substring(i, Math.min(i + maxCharsPerLine, desc.length()));
             canvas.drawText(line, 48, currentY, textPaint);
-            currentY += 18;
-            if (currentY > descY + 125) break;
+            currentY += 16;
+            if (currentY > descY + 80) break;
         }
+
+        // Draw Gemini AI Budget & Risk Line
+        textPaint.setColor(Color.parseColor("#1E40AF"));
+        textPaint.setFakeBoldText(true);
+        String costStr = issue.getRepairCostEstimate() != null ? issue.getRepairCostEstimate() : "₹4,500 - ₹8,500";
+        String matStr = issue.getRecommendedMaterial() != null ? issue.getRecommendedMaterial() : "Cold-Mix Asphalt Patch";
+        canvas.drawText(String.format(Locale.US, "AI Est. Repair Budget: %s  •  Hazard Risk Rating: %.1f / 10", costStr, issue.getHazardRiskScore()), 48, descY + 98, textPaint);
+        
+        textPaint.setColor(Color.parseColor("#475569"));
+        textPaint.setFakeBoldText(false);
+        canvas.drawText("Recommended Material: " + matStr, 48, descY + 118, textPaint);
 
         // 6. Verification Seal & Signature Footer Box
         int signY = 655;
