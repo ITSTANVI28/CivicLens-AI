@@ -30,6 +30,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
 }
 
 dependencies {
@@ -72,6 +76,7 @@ dependencies {
     implementation libs.firebase.storage
 
     testImplementation libs.junit
+    testImplementation 'androidx.arch.core:core-testing:2.2.0'
     androidTestImplementation libs.espresso.core
     androidTestImplementation libs.ext.junit
 }

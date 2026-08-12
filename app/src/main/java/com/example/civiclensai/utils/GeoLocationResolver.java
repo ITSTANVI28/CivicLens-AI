@@ -27,8 +27,8 @@ public class GeoLocationResolver {
         String query = addressInput.trim();
 
         // 1. Attempt System Geocoder Lookup
-        if (Geocoder.isPresent()) {
-            try {
+        try {
+            if (context != null && Geocoder.isPresent()) {
                 Geocoder geocoder = new Geocoder(context, Locale.getDefault());
                 List<Address> addresses = geocoder.getFromLocationName(query, 1);
                 if (addresses != null && !addresses.isEmpty()) {
@@ -36,9 +36,9 @@ public class GeoLocationResolver {
                     Log.d(TAG, "Geocoder successfully resolved: " + address.getLatitude() + ", " + address.getLongitude());
                     return new double[]{address.getLatitude(), address.getLongitude()};
                 }
-            } catch (Exception e) {
-                Log.w(TAG, "Geocoder lookup failed for '" + query + "', falling back to keyword mapper: " + e.getMessage());
             }
+        } catch (Throwable t) {
+            Log.w(TAG, "Geocoder lookup failed for '" + query + "', falling back to keyword mapper: " + t.getMessage());
         }
 
         // 2. Keyword Coordinates Resolver (Pune & Major Sectors)
