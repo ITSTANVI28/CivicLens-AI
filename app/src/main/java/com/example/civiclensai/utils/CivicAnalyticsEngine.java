@@ -124,10 +124,34 @@ public class CivicAnalyticsEngine {
             }
 
             root.put("features", features);
-            return root.toString(2);
-        } catch (Exception e) {
-            return "{\"type\":\"FeatureCollection\",\"features\":[]}";
+            String json = root.toString(2);
+            if (json != null && !json.isEmpty()) return json;
+        } catch (Exception ignored) {}
+
+        // Reliable fallback builder for host testing environments where org.json is stubbed
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n  \"type\": \"FeatureCollection\",\n  \"features\": [\n");
+        if (issues != null) {
+            for (int i = 0; i < issues.size(); i++) {
+                CivicIssue issue = issues.get(i);
+                sb.append("    {\n");
+                sb.append("      \"type\": \"Feature\",\n");
+                sb.append("      \"geometry\": {\n");
+                sb.append("        \"type\": \"Point\",\n");
+                sb.append(String.format(Locale.US, "        \"coordinates\": [%.6f, %.6f]\n", issue.getLongitude(), issue.getLatitude()));
+                sb.append("      },\n");
+                sb.append("      \"properties\": {\n");
+                sb.append(String.format(Locale.US, "        \"id\": \"%s\",\n", issue.getId() != null ? issue.getId() : ""));
+                sb.append(String.format(Locale.US, "        \"title\": \"%s\",\n", issue.getTitle() != null ? issue.getTitle() : ""));
+                sb.append(String.format(Locale.US, "        \"category\": \"%s\",\n", issue.getCategory() != null ? issue.getCategory().name() : ""));
+                sb.append(String.format(Locale.US, "        \"severity\": \"%s\",\n", issue.getSeverity() != null ? issue.getSeverity().name() : ""));
+                sb.append(String.format(Locale.US, "        \"status\": \"%s\"\n", issue.getStatus() != null ? issue.getStatus().name() : ""));
+                sb.append("      }\n");
+                sb.append("    }").append(i < issues.size() - 1 ? "," : "").append("\n");
+            }
         }
+        sb.append("  ]\n}");
+        return sb.toString();
     }
 
     public static String getBadgeTitleForKarma(int karmaPoints) {

@@ -16,8 +16,12 @@ public class SessionManager {
     private final SharedPreferences.Editor editor;
 
     public SessionManager(Context context) {
-        pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
-        editor = pref.edit();
+        this(context != null ? context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE) : null);
+    }
+
+    public SessionManager(SharedPreferences pref) {
+        this.pref = pref;
+        this.editor = pref != null ? pref.edit() : null;
     }
 
     public void createLoginSession(String uid, String name, String email) {
