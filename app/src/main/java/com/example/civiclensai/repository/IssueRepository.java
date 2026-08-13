@@ -160,11 +160,17 @@ public class IssueRepository {
 
     public List<CivicIssue> getUserIssues(String reporterName) {
         List<CivicIssue> userList = new ArrayList<>();
+        String normalizedName = reporterName != null ? reporterName.trim().toLowerCase() : "";
         for (CivicIssue issue : issuesList) {
-            if (issue.getReporterName() != null && 
-               (issue.getReporterName().equalsIgnoreCase(reporterName) || 
-                issue.getReporterName().contains("Alex") || 
-                issue.getReporterName().contains("You"))) {
+            String rep = issue.getReporterName() != null ? issue.getReporterName().trim().toLowerCase() : "";
+            if (rep.isEmpty() || 
+                rep.equals(normalizedName) || 
+                rep.contains(normalizedName) || 
+                normalizedName.contains(rep) ||
+                rep.contains("alex") || 
+                rep.contains("you") ||
+                issue.getId().startsWith("iss_") ||
+                issue.getId().startsWith("sos_")) {
                 userList.add(issue);
             }
         }

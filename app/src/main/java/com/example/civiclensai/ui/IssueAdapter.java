@@ -77,6 +77,7 @@ public class IssueAdapter extends RecyclerView.Adapter<IssueAdapter.IssueViewHol
                     .load(issue.getImageUrl())
                     .centerCrop()
                     .placeholder(android.R.drawable.ic_menu_gallery)
+                    .error(android.R.drawable.ic_menu_gallery)
                     .into(binding.ivIssuePhoto);
 
             itemView.setOnClickListener(v -> listener.onIssueClick(issue));
